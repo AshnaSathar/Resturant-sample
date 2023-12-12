@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/model.dart';
+import 'package:flutter_application_1/view/Table.dart';
 import 'package:http/http.dart' as http;
+
+int tableIndex = 0;
 
 class ProviderClass with ChangeNotifier {
   ModelClass? responseData;
@@ -60,17 +63,13 @@ class ProviderClass with ChangeNotifier {
   Future increment(
       {required int index, required currentCount, required priceofItem}) async {
     selectedItems[index].count = currentCount + 1;
-    print("the items are:$index");
-    print("the currentCount are:$currentCount");
-    print("the price  are:${selectedItems[index].price}");
+
     double priceInt = double.parse(priceofItem);
     sum = 1 * priceInt;
-    print("sum is$sum");
-    print("total sum is check${totalSum}+${sum}");
+
     totalSum = totalSum + sum;
     print(" ${totalSum}");
-    // totalPrice(
-    //     index: index, currentCount: currentCount, priceofItem: priceofItem);
+
     notifyListeners();
   }
 
@@ -79,16 +78,10 @@ class ProviderClass with ChangeNotifier {
     if (currentCount >= 0) {
       selectedItems[index].count = currentCount - 1;
     }
-    // totalPriceSub(
-    //     index: index, currentCount: currentCount, priceofItem: priceofItem);
-    print("the items are:$index");
-    print("the currentCount are:$currentCount");
-    print("the price  are:${selectedItems[index].price}");
-    print("inside decrement---------------------------------------");
+
     double priceInt = double.parse(priceofItem);
     sum = 1 * priceInt;
-    print("sum is$sum");
-    print("total sum is check${totalSum}+${sum}");
+
     totalSum = totalSum - sum;
     print(" ${totalSum}");
     notifyListeners();
@@ -99,25 +92,27 @@ class ProviderClass with ChangeNotifier {
     totalPriceSub(
         index: index, currentCount: currentCount, priceofItem: priceofItem);
     selectedItems.removeAt(index);
-    print("removed $index");
 
     notifyListeners();
   }
 
   Future totalPriceSub(
       {required int index, required currentCount, required priceofItem}) async {
-    print("inside bin---------------------------------------");
-    print("the items are:$index");
-    print("the currentCount are:${currentCount}");
-    print("the price  are:${selectedItems[index].price}");
-    print("the price  are:${selectedItems[index].count}");
     var amount = selectedItems[index].count;
     double priceInt = double.parse(priceofItem);
     sum = amount! * priceInt;
-    print("sum is$sum");
-    print("total sum is check${totalSum}-${sum}");
+
     totalSum = totalSum - sum;
     print(" ${totalSum}");
     notifyListeners();
+  }
+
+  Future tableIndexOn({required index}) async {
+    isSelectedTable[index] = true;
+    tableIndex = index;
+  }
+
+  Future tableIndexOff({required index}) async {
+    isSelectedTable[index] = false;
   }
 }

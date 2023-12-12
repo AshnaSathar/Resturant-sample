@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/utils/color_Constants.dart';
+import 'package:flutter_application_1/view/Table.dart';
 
 class CustomTableWidget extends StatelessWidget {
   final int index;
 
-  // Use the index parameter in the constructor
   CustomTableWidget({required this.index});
 
   @override
@@ -17,10 +16,10 @@ class CustomTableWidget extends StatelessWidget {
       child: Container(
         height: containerHeight,
         width: containerWidth,
-        color: ColorsUsed.amber,
+        color: isSelectedTable[index] ? Colors.green : Colors.red,
         child: Center(
             child: Text(
-          "T$index ",
+          "T${index + 1} ",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         )),
       ),

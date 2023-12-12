@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
 import 'package:flutter_application_1/model/model.dart';
-import 'package:flutter_application_1/widgets/CustomBottomNavigationBar.dart';
+import 'package:flutter_application_1/view/Home.dart';
+import 'package:flutter_application_1/view/categories.dart';
+import 'package:flutter_application_1/widgets/CustomFloatingActionButtonForcart.dart';
+import 'package:flutter_application_1/widgets/CustomeButton.dart';
 import 'package:provider/provider.dart';
+
+var currentCount = 0;
 
 class CartPage extends StatefulWidget {
   @override
@@ -11,7 +16,6 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   var count = 0;
-  var currentCount = 0;
   var price;
   var sum;
   @override
@@ -40,9 +44,25 @@ class _CartPageState extends State<CartPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Cart"),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 25),
+        child: CustomFloatingActionButton().getFloatingActionButton(context),
       ),
+      appBar: AppBar(
+          backgroundColor: Colors.black,
+          title: Text("Cart"),
+          leading: ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.black)),
+            onPressed: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CategoriesPage(),
+                  ));
+            },
+            child: Icon(Icons.arrow_back),
+          )),
       body: Stack(
         children: [
           Consumer<ProviderClass>(
@@ -85,18 +105,7 @@ class _CartPageState extends State<CartPage> {
                                               priceofItem:
                                                   selectedItems[index].price);
 
-                                      setState(() {
-                                        // sum[index] =
-                                        //     (double.parse(currentItem.price!) *
-                                        //         (selectedItems[index].count ??
-                                        //                 0)
-                                        //             .toDouble());
-                                        // print(sum[index]);
-                                        // for (int i = 0; i <= index; i++) {
-                                        //   sum = sum + sum[i];
-                                        // }
-                                      });
-                                      // print("sum=$sum");
+                                      setState(() {});
                                     },
                                     child: Icon(
                                       Icons.add,
@@ -182,7 +191,15 @@ class _CartPageState extends State<CartPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                          onPressed: () {}, child: Text("Send to kitchen")),
+                          onPressed: () {
+                            isSendKitchen = !isSendKitchen;
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomePage(),
+                                ));
+                          },
+                          child: Text("Send to kitchen")),
                     ),
                     Text(
                       "Total Cost:${Provider.of<ProviderClass>(context).totalSum}",
@@ -193,7 +210,10 @@ class _CartPageState extends State<CartPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Provider.of<ProviderClass>(context, listen: false)
+                              .tableIndexOff(index: tableIndex);
+                        },
                         child: Text("Give Order"),
                       ),
                     ),

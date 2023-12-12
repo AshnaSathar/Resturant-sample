@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
 import 'package:flutter_application_1/model/model.dart';
 import 'package:flutter_application_1/utils/color_Constants.dart';
-import 'package:flutter_application_1/view/CategoryList.dart';
 import 'package:flutter_application_1/view/cart.dart';
 import 'package:flutter_application_1/widgets/CustomAppBar.dart';
 import 'package:provider/provider.dart';
 
-class CategoriesPage extends StatefulWidget {
-  const CategoriesPage({super.key});
+class SortedPage extends StatefulWidget {
+  final String? selectedCategory;
+  const SortedPage({super.key, required this.selectedCategory});
 
   @override
-  State<CategoriesPage> createState() => _CategoriesPageState();
+  State<SortedPage> createState() => _SortedPageState();
 }
 
-class _CategoriesPageState extends State<CategoriesPage> {
+class _SortedPageState extends State<SortedPage> {
   List<bool> checkboxStates = List.generate(100, (index) => false);
   List<int> selectedIndices = [];
 
@@ -35,6 +35,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   Widget build(BuildContext context) {
     var containerHeight = MediaQuery.of(context).size.height * 0.2;
+    CustomAppBar appBarObject = CustomAppBar();
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -52,21 +53,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
         },
         child: Text("Done"),
       ),
-      appBar: AppBar(
-        title: Text("Items List"),
-        backgroundColor: Colors.black,
-        actions: [
-          InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CategoryList(),
-                    ));
-              },
-              child: Icon(Icons.category))
-        ],
-      ),
+      appBar: appBarObject.getAppBar(title: "${widget.selectedCategory}"),
       body: Consumer<ProviderClass>(
         builder: (context, provider, child) {
           if (provider.responseData == null ||
@@ -75,7 +62,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
           }
 
           List<Food> responseData = provider.responseData!.food!;
-
+          var categoryItems = responseData
+              .where((food) => food.categoryName == widget.selectedCategory)
+              .toList();
           return GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
@@ -84,7 +73,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
               mainAxisExtent: containerHeight,
             ),
             itemBuilder: (BuildContext context, int index) {
-              var currentItem = responseData[index];
+              var currentItem = categoryItems[index];
               return Column(
                 children: [
                   Container(
@@ -144,7 +133,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 ],
               );
             },
-            itemCount: responseData.length,
+            itemCount: categoryItems.length,
           );
         },
       ),

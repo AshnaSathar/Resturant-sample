@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/utils/color_Constants.dart';
+import 'package:flutter_application_1/controller/provider.dart';
 import 'package:flutter_application_1/view/Home.dart';
 import 'package:flutter_application_1/widgets/CustomAppBar.dart';
+import 'package:provider/provider.dart';
 import '../widgets/TableWIdget.dart';
+
+List<bool> isSelectedTable = List.generate(100, (index) => false);
 
 class TablesPage extends StatefulWidget {
   const TablesPage({Key? key}) : super(key: key);
@@ -14,22 +17,18 @@ class TablesPage extends StatefulWidget {
 class _TablesPageState extends State<TablesPage> {
   @override
   Widget build(BuildContext context) {
-    int i = 0;
     var screenHeight = MediaQuery.of(context).size.height;
-    var screenWidth = MediaQuery.of(context).size.width;
-    var containerHeight = MediaQuery.of(context).size.height * 0.5;
-    var containerWidth = MediaQuery.of(context).size.width * 0.5;
+
     CustomAppBar appBarObject = CustomAppBar();
 
     return Scaffold(
-      appBar: appBarObject.getAppBar(title: ""),
+      appBar: appBarObject.getAppBar(title: "Table"),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
             Container(
               height: screenHeight,
-              color: ColorsUsed.black,
               child: GridView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -38,17 +37,24 @@ class _TablesPageState extends State<TablesPage> {
                   mainAxisSpacing: 10,
                 ),
                 itemBuilder: (BuildContext context, int index) {
-                  i++;
                   return InkWell(
+                    onDoubleTap: () {
+                      isSelectedTable[index] = false;
+                      setState(() {});
+                    },
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => HomePage(),
-                          ));
+                      Provider.of<ProviderClass>(context, listen: false)
+                          .tableIndexOn(index: index);
+                      setState(() {});
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomePage(),
+                        ),
+                      );
                       print('Tapped on container $index');
                     },
-                    child: CustomTableWidget(index: i),
+                    child: CustomTableWidget(index: index),
                   );
                 },
                 itemCount: 8,

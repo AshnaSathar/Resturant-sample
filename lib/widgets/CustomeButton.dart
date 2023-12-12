@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/view/Home.dart';
+import 'package:flutter_application_1/view/Table.dart';
+
+bool isSendKitchen = false;
 
 class ButtonWidget extends StatelessWidget {
   final title;
@@ -14,10 +16,11 @@ class ButtonWidget extends StatelessWidget {
         onPressed: () {
           if (title == "Login" || title == "login") {
             Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(),
-                ));
+              context,
+              MaterialPageRoute(
+                builder: (context) => TablesPage(),
+              ),
+            );
           }
         },
         child: Text(title),

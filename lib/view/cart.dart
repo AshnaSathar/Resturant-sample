@@ -32,7 +32,7 @@ class _CartPageState extends State<CartPage> {
   Future<void> addToaddtoCart() async {
     try {
       await Provider.of<ProviderClass>(context, listen: false).fetchData();
-      Provider.of<ProviderClass>(context, listen: false).addtoCart(ids: [3, 1]);
+      Provider.of<ProviderClass>(context, listen: false).addtoCart(ids: []);
     } catch (error) {
       print("Error fetching data: $error");
     }

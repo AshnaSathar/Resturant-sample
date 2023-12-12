@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => ProviderClass(),
       child: MaterialApp(
-        home: TablesPage(),
+        home: CategoriesPage(),
       ),
     );
   }

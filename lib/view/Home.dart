@@ -69,22 +69,15 @@ class _HomePageState extends State<HomePage>
                     child: InkWell(
                         onTap: () {
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CategoriesPage(),
-                              ));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CategoriesPage(),
+                            ),
+                          );
                         },
                         child: ButtonWidget(title: "Add Items")),
                   ),
                 ),
-                // child: Row(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: [
-                //     Container(
-                //       child: Icon(Icons.add),
-                //     ),
-                //   ],
-                // ),
               ),
 
               // Content for Dine In tab

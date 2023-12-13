@@ -89,7 +89,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       padding: const EdgeInsets.only(bottom: 5, left: 5),
                       child: InkWell(
                         onTap: () {
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => SortedPage(
@@ -146,6 +146,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
                         onPressed: () {
+                          // Handle cart button press
                           print("Selected Indices: $selectedIndices");
                           Provider.of<ProviderClass>(context, listen: false)
                               .addtoCart(ids: selectedIndices);

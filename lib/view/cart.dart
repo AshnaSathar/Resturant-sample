@@ -6,7 +6,6 @@ import 'package:flutter_application_1/view/categories.dart';
 import 'package:flutter_application_1/widgets/CustomFloatingActionButtonForcart.dart';
 import 'package:flutter_application_1/widgets/CustomeButton.dart';
 import 'package:provider/provider.dart';
-
 import 'package:lottie/lottie.dart';
 
 var currentCount = 1;
@@ -17,9 +16,8 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  var count = 0;
   var price;
-  var sum;
+
   @override
   void initState() {
     getData();
@@ -51,25 +49,29 @@ class _CartPageState extends State<CartPage> {
         child: CustomFloatingActionButton().getFloatingActionButton(context),
       ),
       appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Text("Cart"),
-          leading: ElevatedButton(
-            style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.black)),
-            onPressed: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CategoriesPage(),
-                  ));
-            },
-            child: Icon(Icons.arrow_back),
-          )),
+        backgroundColor: Colors.black,
+        title: Text("Cart"),
+        leading: ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(Colors.black),
+          ),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CategoriesPage(),
+              ),
+            );
+          },
+          child: Icon(Icons.arrow_back),
+        ),
+      ),
       body: isCartButtonDisabled.isEmpty
           ? Center(
               child: Container(
-                  height: MediaQuery.sizeOf(context).height * .1,
-                  child: Lottie.asset('assets/Animation - 1702448401276.json')),
+                height: MediaQuery.sizeOf(context).height * .1,
+                child: Lottie.asset('assets/Animation - 1702448401276.json'),
+              ),
             )
           : Stack(
               children: [
@@ -207,44 +209,48 @@ class _CartPageState extends State<CartPage> {
                   },
                 ),
                 Positioned(
-                    bottom: 0,
-                    child: Container(
-                      width: MediaQuery.sizeOf(context).width,
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  isSendKitchen = !isSendKitchen;
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => HomePage(),
-                                      ));
-                                },
-                                child: Text("Send to kitchen")),
+                  bottom: 0,
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              isSendKitchen = !isSendKitchen;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomePage(),
+                                ),
+                              );
+                            },
+                            child: Text("Send to kitchen"),
                           ),
-                          Text(
-                            "Total Cost:${Provider.of<ProviderClass>(context).totalSum}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                        Text(
+                          "Total Cost:${Provider.of<ProviderClass>(context).totalSum}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
                           ),
-                          Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                              onPressed: () {
-                                Provider.of<ProviderClass>(context,
-                                        listen: false)
-                                    .tableIndexOff(index: tableIndex);
-                              },
-                              child: Text("Give Order"),
-                            ),
+                        ),
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Provider.of<ProviderClass>(context, listen: false)
+                                  .tableIndexOff(index: tableIndex);
+                            },
+                            child: Text("Give Order"),
                           ),
-                        ],
-                      ),
-                    ))
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
     );

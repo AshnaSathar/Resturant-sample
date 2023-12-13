@@ -10,7 +10,7 @@ class ProviderClass with ChangeNotifier {
   ModelClass? responseData;
   List<String> selectedIds = [];
   List<Food> selectedItems = [];
-  List<Food> selectedIndices = [];
+
   double totalSum = 0;
 
   Future<void> fetchData() async {
@@ -36,7 +36,7 @@ class ProviderClass with ChangeNotifier {
 
   void addtoCart({required List<int> ids}) {
     print("invoked");
-    print("id inside the provider class $ids");
+    print("id inside the provider class-addtocart $ids");
     List<Food>? allItems = responseData?.food;
 
     for (int i = 0; i < ids.length; i++) {
@@ -53,7 +53,7 @@ class ProviderClass with ChangeNotifier {
               [],
         );
         print("the item inside ur addto cart");
-        print(selectedItems[i].categoryName);
+        print(selectedItems.map((item) => item.productName));
       }
     }
 

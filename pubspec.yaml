@@ -54,6 +54,8 @@ dependencies:
   url_launcher: ^6.2.1
   hidden_drawer_menu: ^3.0.1
   shared_preferences: ^2.2.2
+  anim_search_bar: ^2.0.3
+  filter_list: ^1.0.2
 
 dev_dependencies:
   flutter_lints: ^2.0.0

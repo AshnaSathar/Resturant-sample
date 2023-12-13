@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => ProviderClass(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: CategoriesPage(),
       ),
     );

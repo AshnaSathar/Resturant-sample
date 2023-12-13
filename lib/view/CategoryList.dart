@@ -30,8 +30,7 @@ class _CategoryListState extends State<CategoryList> {
 
   Widget build(BuildContext context) {
     var categoryname;
-    var screenHeight = MediaQuery.of(context).size.height;
-    var screenWidth = MediaQuery.of(context).size.width;
+
     var containerHeight = MediaQuery.of(context).size.height * 0.3;
     var containerWidth = MediaQuery.of(context).size.width * 0.3;
     return Scaffold(

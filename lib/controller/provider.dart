@@ -10,22 +10,17 @@ class ProviderClass with ChangeNotifier {
   ModelClass? responseData;
   List<String> selectedIds = [];
   List<Food> selectedItems = [];
-  var count = 0;
-  var currentCount;
+  List<Food> selectedIndices = [];
   double totalSum = 0;
-  double sum = 0;
-  double? currentPrice;
+
   Future<void> fetchData() async {
     try {
       final url =
           Uri.parse('https://mocki.io/v1/02af12fd-41ad-42f6-9137-b405e0c1d8df');
       var response = await http.get(url);
-      // print("Response Status Code: ${response.statusCode}");
-      // print("Response Body: ${response.body}");
 
       if (response.statusCode == 200) {
         responseData = ModelClass.fromJson(jsonDecode(response.body));
-        // print(responseData);
         selectedIds = List<String>.filled(
           responseData?.food?.length ?? 0,
           "",
@@ -39,13 +34,16 @@ class ProviderClass with ChangeNotifier {
     }
   }
 
-  Future<void> addtoCart({required List<int> ids}) async {
+  void addtoCart({required List<int> ids}) {
+    print("invoked");
+    print("id inside the provider class $ids");
     List<Food>? allItems = responseData?.food;
 
     for (int i = 0; i < ids.length; i++) {
       bool itemExists = selectedItems.any((item) => item.id == ids[i]);
 
       if (!itemExists) {
+        print("verified");
         selectedItems.addAll(
           allItems
                   ?.where(
@@ -54,41 +52,45 @@ class ProviderClass with ChangeNotifier {
                   .toList() ??
               [],
         );
+        print("the item inside ur addto cart");
+        print(selectedItems[i].categoryName);
       }
     }
 
     notifyListeners();
   }
 
-  Future increment(
+  Future<void> increment(
       {required int index, required currentCount, required priceofItem}) async {
+    print("currentCount=$currentCount");
     selectedItems[index].count = currentCount + 1;
 
     double priceInt = double.parse(priceofItem);
-    sum = 1 * priceInt;
+    double incrementSum = 1 * priceInt;
 
-    totalSum = totalSum + sum;
-    print(" ${totalSum}");
+    totalSum += incrementSum;
+    print("Total Sum: $totalSum");
 
     notifyListeners();
   }
 
-  Future decrement(
+  Future<void> decrement(
       {required int index, required currentCount, required priceofItem}) async {
     if (currentCount >= 0) {
       selectedItems[index].count = currentCount - 1;
+
+      double priceInt = double.parse(priceofItem);
+      double decrementSum = 1 * priceInt;
+
+      totalSum -= decrementSum;
+      print("Total Sum: $totalSum");
+
+      notifyListeners();
     }
-
-    double priceInt = double.parse(priceofItem);
-    sum = 1 * priceInt;
-
-    totalSum = totalSum - sum;
-    print(" ${totalSum}");
-    notifyListeners();
   }
 
-  Future removeFromcart(
-      {required index, required currentCount, required priceofItem}) async {
+  void removeFromcart(
+      {required index, required currentCount, required priceofItem}) {
     totalPriceSub(
         index: index, currentCount: currentCount, priceofItem: priceofItem);
     selectedItems.removeAt(index);
@@ -96,23 +98,24 @@ class ProviderClass with ChangeNotifier {
     notifyListeners();
   }
 
-  Future totalPriceSub(
-      {required int index, required currentCount, required priceofItem}) async {
+  void totalPriceSub(
+      {required int index, required currentCount, required priceofItem}) {
     var amount = selectedItems[index].count;
     double priceInt = double.parse(priceofItem);
-    sum = amount! * priceInt;
+    double decrementSum = amount! * priceInt;
 
-    totalSum = totalSum - sum;
-    print(" ${totalSum}");
+    totalSum -= decrementSum;
+    print("Total Sum: $totalSum");
+
     notifyListeners();
   }
 
-  Future tableIndexOn({required index}) async {
+  void tableIndexOn({required index}) {
     isSelectedTable[index] = true;
     tableIndex = index;
   }
 
-  Future tableIndexOff({required index}) async {
+  void tableIndexOff({required index}) {
     isSelectedTable[index] = false;
   }
 }

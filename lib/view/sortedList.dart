@@ -143,11 +143,7 @@ class _SortedPageState extends State<SortedPage> {
                                         Provider.of<ProviderClass>(context,
                                                 listen: false)
                                             .addtoCart(ids: selectedIndices);
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //       builder: (context) => CartPage(),
-                                        //     ));
+
                                         setState(() {
                                           if (selectedIndices.contains(index)) {
                                             selectedIndices.remove(index);

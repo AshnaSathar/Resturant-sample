@@ -57,6 +57,8 @@ class _CartPageState extends State<CartPage> {
             backgroundColor: MaterialStatePropertyAll(ColorsUsed.buttonColor),
           ),
           onPressed: () {
+            print(
+                "${Provider.of<ProviderClass>(context, listen: false).selectedIds}");
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -67,7 +69,7 @@ class _CartPageState extends State<CartPage> {
           child: Icon(Icons.arrow_back),
         ),
       ),
-      body: Provider.of<ProviderClass>(context).selectedIds.isEmpty
+      body: Provider.of<ProviderClass>(context).selectedItems.isEmpty
           ? Center(
               child: Container(
                 height: MediaQuery.sizeOf(context).height * .1,

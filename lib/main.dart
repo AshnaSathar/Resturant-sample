@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       create: (context) => ProviderClass(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: CategoriesPage(),
+        home: LoginPage(),
       ),
     );
   }

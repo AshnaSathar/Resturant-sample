@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/controller/provider.dart';
-import 'package:flutter_application_1/model/model.dart';
 import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/CategoryList.dart';
 import 'package:flutter_application_1/view/Table.dart';
 import 'package:flutter_application_1/view/cart.dart';
 import 'package:flutter_application_1/view/categories.dart';
-import 'package:flutter_application_1/widgets/CustomAppBar.dart';
+import 'package:flutter_application_1/view/invoice.dart';
 import 'package:flutter_application_1/widgets/CustomeButton.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,6 +31,44 @@ class _HomePageState extends State<HomePage>
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CategoriesPage(),
+                        ));
+                  },
+                  child: Icon(Icons.fastfood)),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CategoryList(),
+                        ));
+                  },
+                  child: Icon(Icons.category)),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CartPage(),
+                        ));
+                  },
+                  child: Icon(Icons.trolley)),
+            ),
+          ],
           title: Text(
             "Restaurant",
             style: TextStyle(color: ColorsUsed.text_Color_White),
@@ -147,15 +182,15 @@ class _HomePageState extends State<HomePage>
           controller: _tabController,
           children: [
             isSendKitchen
-                ? CartPage()
+                ? Invoice()
                 : ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CategoriesPage(),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => CategoriesPage(),
+                      //   ),
+                      // );
                     },
                     child: Text("add items"),
                   ),

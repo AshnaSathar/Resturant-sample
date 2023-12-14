@@ -56,6 +56,9 @@ dependencies:
   shared_preferences: ^2.2.2
   anim_search_bar: ^2.0.3
   filter_list: ^1.0.2
+  footer: ^0.0.4
+  material_dialogs: ^1.1.4
+  pdf: ^3.10.7
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -73,6 +76,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/Animation - 1702448401276.json
+    - assets/Animation - 1702544292158.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

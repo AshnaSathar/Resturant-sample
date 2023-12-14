@@ -213,8 +213,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                                       "Item added to cart: ${currentItem.productName}");
 
                                                   setState(() {
-                                                    isCartButtonDisabled[
-                                                        index] = true;
                                                     selectedIndices
                                                         .add(index + 1);
                                                     Provider.of<ProviderClass>(
@@ -225,7 +223,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                                                 selectedIndices);
                                                   });
                                                 },
-                                          child: Text("Add to Cart")))
+                                          child: Text("Add")))
                                 ])
                               ])))
                     ]);

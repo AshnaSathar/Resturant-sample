@@ -87,3 +87,95 @@
                 //     ),
                 //   )
                 // -----------------------------------------------------------------------------------------
+                // invoice with border
+                import 'package:flutter/material.dart';
+// import 'package:flutter_application_1/controller/provider.dart';
+// import 'package:provider/provider.dart';
+
+// class Invoice extends StatefulWidget {
+//   const Invoice({Key? key}) : super(key: key);
+
+//   @override
+//   State<Invoice> createState() => _InvoiceState();
+// }
+
+// class _InvoiceState extends State<Invoice> {
+//   List<String> rowHeading = ["ID", "NAME", "PRICE", "COUNT", "RATE"];
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Column(
+//         children: [
+//           Table(
+//             border: TableBorder.all(color: Colors.black),
+//             children: [
+//               TableRow(
+//                 decoration: BoxDecoration(color: Colors.grey),
+//                 children: rowHeading
+//                     .map(
+//                       (heading) => TableCell(
+//                         child: Padding(
+//                           padding: const EdgeInsets.all(8.0),
+//                           child: Container(
+//                             child: Text(
+//                               heading,
+//                               style: TextStyle(
+//                                 fontWeight: FontWeight.bold,
+//                                 fontSize: 18,
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     )
+//                     .toList(),
+//               ),
+//             ],
+//           ),
+//           Expanded(
+//             child: ListView.builder(
+//               itemCount: Provider.of<ProviderClass>(context).selectedItems.length,
+//               itemBuilder: (context, index) {
+//                 var selectedItem = Provider.of<ProviderClass>(context).selectedItems[index];
+//                 List<dynamic> rowContent = [
+//                   selectedItem.id,
+//                   selectedItem.productName,
+//                   selectedItem.price,
+//                   selectedItem.count,
+//                   selectedItem.price // Not sure if 'rate' is meant to be used here
+//                 ];
+
+//                 return Table(
+//                   border: TableBorder.all(color: Colors.black),
+//                   children: [
+//                     TableRow(
+//                       children: rowContent
+//                           .map(
+//                             (content) => TableCell(
+//                               child: Padding(
+//                                 padding: const EdgeInsets.all(8.0),
+//                                 child: Container(
+//                                   child: Text(
+//                                     "$content",
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: 18,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                           )
+//                           .toList(),
+//                     ),
+//                   ],
+//                 );
+//               },
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

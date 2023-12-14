@@ -5,7 +5,6 @@ import 'package:flutter_application_1/model/model.dart';
 import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/cart.dart';
 import 'package:flutter_application_1/view/sortedList.dart';
-import 'package:flutter_application_1/widgets/CustomAppBar.dart';
 import 'package:provider/provider.dart';
 
 Map<int, bool> isCartButtonDisabled = {};
@@ -49,7 +48,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
               padding: const EdgeInsets.all(10.0),
               child: AnimSearchBar(
                 onSubmitted: (p0) {},
-                width: 400,
+                width: MediaQuery.sizeOf(context).width * .6,
                 textController: textController,
                 onSuffixTap: () {
                   setState(() {
@@ -99,7 +98,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           padding: const EdgeInsets.only(bottom: 5, left: 5),
                           child: InkWell(
                               onTap: () {
-                                Navigator.pushReplacement(
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => SortedPage(
@@ -137,6 +136,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
               Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStatePropertyAll(ColorsUsed.buttonColor),
+                      ),
                       onPressed: () {
                         print("Selected Indices: $selectedIndices");
 
@@ -198,6 +201,11 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                   Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    ColorsUsed.buttonColor),
+                                          ),
                                           onPressed: isDisabled
                                               ? null
                                               : () {

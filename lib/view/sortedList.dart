@@ -44,9 +44,16 @@ class _SortedPageState extends State<SortedPage> {
   @override
   Widget build(BuildContext context) {
     var containerHeight = MediaQuery.of(context).size.height * 0.2;
-    CustomAppBar appBarObject = CustomAppBar();
 
     return Scaffold(
+      appBar: AppBar(
+        leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back_ios_new)),
+        title: Text("${widget.selectedCategory}"),
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: ColorsUsed.black,
         onPressed: () {
@@ -55,18 +62,18 @@ class _SortedPageState extends State<SortedPage> {
               MaterialPageRoute(
                 builder: (context) => CartPage(),
               ));
-          // Provider.of<ProviderClass>(context, listen: false)
-          //     .addtoCart(ids: selectedIndices);
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(
-          //     content: Text("Items added to cart."),
-          //     duration: Duration(seconds: 2),
-          //   ),
-          // );
+
+          Provider.of<ProviderClass>(context, listen: false)
+              .addtoCart(ids: selectedIndices);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Items added to cart."),
+              duration: Duration(seconds: 2),
+            ),
+          );
         },
         child: Text("cart"),
       ),
-      appBar: appBarObject.getAppBar(title: "${widget.selectedCategory}"),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : Consumer<ProviderClass>(
@@ -150,14 +157,15 @@ class _SortedPageState extends State<SortedPage> {
                                         });
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        primary: selectedIndices.contains(index)
-                                            ? Colors.red
-                                            : Colors.green,
+                                        backgroundColor:
+                                            selectedIndices.contains(index)
+                                                ? Colors.red
+                                                : Colors.green,
                                       ),
                                       child: Text(
                                         selectedIndices.contains(index)
-                                            ? "Remove from Cart"
-                                            : "Add to Cart",
+                                            ? "Remove"
+                                            : "Addt",
                                       ),
                                     ),
                                   ),

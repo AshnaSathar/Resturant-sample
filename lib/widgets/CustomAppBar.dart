@@ -5,6 +5,7 @@ class CustomAppBar {
   getAppBar({required String title}) {
     return AppBar(
       backgroundColor: ColorsUsed.black,
+
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

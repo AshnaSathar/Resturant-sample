@@ -11,7 +11,7 @@ class ProviderClass with ChangeNotifier {
   ModelClass? responseData;
   List<String> selectedIds = [];
   List<Food> selectedItems = [];
-
+  List isDisabled = [];
   double totalSum = 0;
 
   Future<void> fetchData() async {
@@ -26,6 +26,7 @@ class ProviderClass with ChangeNotifier {
           responseData?.food?.length ?? 0,
           "",
         );
+        isDisabled = List.filled(responseData?.food?.length ?? 0, false);
         notifyListeners();
       } else {
         print("Failed to fetch data. Status code: ${response.statusCode}");
@@ -35,26 +36,23 @@ class ProviderClass with ChangeNotifier {
     }
   }
 
-  void addtoCart({required List<int> ids}) {
-    print("invoked");
-    print("id inside the provider class-addtocart $ids");
+  void addtoCart({required List<int?> ids}) {
     List<Food>? allItems = responseData?.food;
 
-    for (int i = 0; i < ids.length; i++) {
-      bool itemExists = selectedItems.any((item) => item.id == ids[i]);
+    for (int? id in ids) {
+      if (id != null) {
+        bool itemExists = selectedItems.any((item) => item.id == id);
 
-      if (!itemExists) {
-        print("verified");
-        selectedItems.addAll(
-          allItems
-                  ?.where(
-                    (item) => ids[i] == item.id,
-                  )
-                  .toList() ??
-              [],
-        );
-        print("the item inside ur addto cart");
-        print(selectedItems.map((item) => item.productName));
+        if (!itemExists) {
+          selectedItems.addAll(
+            allItems
+                    ?.where(
+                      (item) => id == item.id,
+                    )
+                    .toList() ??
+                [],
+          );
+        }
       }
     }
 
@@ -118,5 +116,14 @@ class ProviderClass with ChangeNotifier {
 
   void tableIndexOff({required index}) {
     isSelectedTable[index] = false;
+  }
+
+  // Disabling and enabling elevated button for add to cart.
+  void disableButton({required var id}) {
+    int index = responseData!.food!.indexWhere((item) => item.id == id);
+    if (index != -1) {
+      isDisabled[index] = !isDisabled[index];
+      notifyListeners();
+    }
   }
 }

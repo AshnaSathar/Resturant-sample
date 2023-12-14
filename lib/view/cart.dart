@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
 import 'package:flutter_application_1/model/model.dart';
+import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/Home.dart';
 import 'package:flutter_application_1/view/categories.dart';
 import 'package:flutter_application_1/widgets/CustomFloatingActionButtonForcart.dart';
@@ -53,7 +54,7 @@ class _CartPageState extends State<CartPage> {
         title: Text("Cart"),
         leading: ElevatedButton(
           style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(Colors.black),
+            backgroundColor: MaterialStatePropertyAll(ColorsUsed.buttonColor),
           ),
           onPressed: () {
             Navigator.pushReplacement(
@@ -66,7 +67,7 @@ class _CartPageState extends State<CartPage> {
           child: Icon(Icons.arrow_back),
         ),
       ),
-      body: isCartButtonDisabled.isEmpty
+      body: Provider.of<ProviderClass>(context).selectedIds.isEmpty
           ? Center(
               child: Container(
                 height: MediaQuery.sizeOf(context).height * .1,
@@ -217,6 +218,9 @@ class _CartPageState extends State<CartPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStatePropertyAll(
+                                    ColorsUsed.buttonColor)),
                             onPressed: () {
                               isSendKitchen = !isSendKitchen;
                               Navigator.push(
@@ -240,6 +244,10 @@ class _CartPageState extends State<CartPage> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStatePropertyAll(
+                                  ColorsUsed.buttonColor),
+                            ),
                             onPressed: () {
                               Provider.of<ProviderClass>(context, listen: false)
                                   .tableIndexOff(index: tableIndex);

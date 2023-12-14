@@ -22,7 +22,9 @@ class _TablesPageState extends State<TablesPage> {
     CustomAppBar appBarObject = CustomAppBar();
 
     return Scaffold(
-      appBar: appBarObject.getAppBar(title: "Table"),
+      appBar: appBarObject.getAppBar(
+        title: "Table",
+      ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(

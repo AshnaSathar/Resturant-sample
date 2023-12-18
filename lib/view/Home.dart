@@ -127,10 +127,26 @@ class _HomePageState extends State<HomePage>
 
             // Content for Dine In tab
             Container(
-              child: Center(
-                child: Text("Dine In Content"),
-              ),
-            ),
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Welcome back!"),
+                Text("  "),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CategoriesPage(),
+                        ));
+                  },
+                  child: Text(
+                    "START",
+                    style: TextStyle(color: Colors.blue[800]),
+                  ),
+                )
+              ],
+            )),
           ],
         ),
       ),

@@ -4,7 +4,7 @@ import 'package:flutter_application_1/utils/color_Constants.dart';
 class CustomAppBar {
   getAppBar({required String title}) {
     return AppBar(
-      backgroundColor: ColorsUsed.black,
+      backgroundColor: ColorsUsed.appBarColor,
 
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

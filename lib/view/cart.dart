@@ -187,7 +187,7 @@ class _CartPageState extends State<CartPage> {
                                 IconButton(
                                   onPressed: () {
                                     setState(() {
-                                      isCartButtonDisabled[index] = false;
+                                      // isCartButtonDisabled[index] = false;
                                     });
                                     Provider.of<ProviderClass>(context,
                                             listen: false)
@@ -196,8 +196,8 @@ class _CartPageState extends State<CartPage> {
                                             currentCount: currentCount,
                                             priceofItem:
                                                 selectedItems[index].price);
-                                    print(
-                                        " inside the remove code$isCartButtonDisabled");
+                                    // print(
+                                    //     " inside the remove code$isCartButtonDisabled");
                                     print("index inside the remove:$index");
                                   },
                                   icon: Icon(Icons.delete),
@@ -251,8 +251,8 @@ class _CartPageState extends State<CartPage> {
                                   ColorsUsed.buttonColor),
                             ),
                             onPressed: () {
-                              Provider.of<ProviderClass>(context, listen: false)
-                                  .tableIndexOff(index: tableIndex);
+                              // Provider.of<ProviderClass>(context, listen: false)
+                              //     .tableIndexOff(index:tableIndex );
                             },
                             child: Text("Give Order"),
                           ),

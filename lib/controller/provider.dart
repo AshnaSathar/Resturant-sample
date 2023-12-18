@@ -5,13 +5,15 @@ import 'package:flutter_application_1/view/Table.dart';
 import 'package:http/http.dart' as http;
 
 int tableIndex = 0;
+List<int> disabledIds = [];
 
 class ProviderClass with ChangeNotifier {
   ModelClass? responseData;
   List<String> selectedIds = [];
   List<Food> selectedItems = [];
-  List isDisabled = [];
   double totalSum = 0;
+  List<int> idtoDisable = [];
+  List<int> sharedDisabledIds = [];
 
   Future<void> fetchData() async {
     try {
@@ -25,7 +27,7 @@ class ProviderClass with ChangeNotifier {
           responseData?.food?.length ?? 0,
           "",
         );
-        isDisabled = List.filled(responseData?.food?.length ?? 0, false);
+
         notifyListeners();
       } else {
         print("Failed to fetch data. Status code: ${response.statusCode}");
@@ -43,14 +45,14 @@ class ProviderClass with ChangeNotifier {
         bool itemExists = selectedItems.any((item) => item.id == id);
 
         if (!itemExists) {
-          selectedItems.addAll(
-            allItems
-                    ?.where(
-                      (item) => id == item.id,
-                    )
-                    .toList() ??
-                [],
-          );
+          var newItem = allItems?.firstWhere((item) => id == item.id,
+              orElse: () => Food());
+
+          newItem?.isEnabled = !sharedDisabledIds.contains(id);
+
+          selectedItems.add(newItem ?? Food());
+
+          sharedDisabledIds.add(id);
         }
       }
     }
@@ -60,7 +62,7 @@ class ProviderClass with ChangeNotifier {
 
   Future<void> increment(
       {required int index, required currentCount, required priceofItem}) async {
-    print("currentCount=$currentCount");
+    print("inside increment");
     selectedItems[index].count = currentCount + 1;
 
     double priceInt = double.parse(priceofItem);
@@ -117,20 +119,17 @@ class ProviderClass with ChangeNotifier {
     isSelectedTable[index] = false;
   }
 
-  // Disabling and enabling elevated button for add to cart.
   void disableButton({required var id}) {
-    int index = responseData!.food!.indexWhere((item) => item.id == id);
-    if (index != -1) {
-      isDisabled[index] = !isDisabled[index];
-      notifyListeners();
-    }
-  }
+    idtoDisable.add(id);
+    sharedDisabledIds.add(id);
 
-  void clear() {
-    selectedItems.clear();
-    selectedIds.clear();
-    isDisabled = List.filled(responseData?.food?.length ?? 0, false);
-    totalSum = 0;
+    for (int i = 0; i < selectedItems.length; i++) {
+      if (selectedItems[i].id == id) {
+        selectedItems[i].isEnabled = false;
+        break;
+      }
+    }
+
     notifyListeners();
   }
 }

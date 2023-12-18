@@ -36,15 +36,16 @@ class Food {
   String? productName;
   String? categoryName;
   int? count;
+  bool? isEnabled;
 
-  Food({
-    this.id,
-    this.image,
-    this.price,
-    this.productName,
-    this.categoryName,
-    this.count = 0,
-  });
+  Food(
+      {this.id,
+      this.image,
+      this.price,
+      this.productName,
+      this.categoryName,
+      this.count = 0,
+      this.isEnabled = true});
 
   factory Food.fromJson(Map<String, dynamic> json) => Food(
         id: json["id"],

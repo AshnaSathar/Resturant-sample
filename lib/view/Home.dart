@@ -5,7 +5,9 @@ import 'package:flutter_application_1/view/Table.dart';
 import 'package:flutter_application_1/view/cart.dart';
 import 'package:flutter_application_1/view/categories.dart';
 import 'package:flutter_application_1/view/invoice.dart';
+import 'package:flutter_application_1/widgets/CustomDrawer.dart';
 import 'package:flutter_application_1/widgets/CustomeButton.dart';
+import 'package:lottie/lottie.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -95,105 +97,33 @@ class _HomePageState extends State<HomePage>
             unselectedLabelColor: Colors.black.withOpacity(0.6),
           ),
         ),
-        drawer: Drawer(
-          // Add your drawer content here
-          child: ListView(
-            children: [
-              ListTile(
-                title: Text(
-                  "RESTURANT NAME",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              ListTile(
-                title: Text("HOME"),
-                leading: Icon(
-                  Icons.home,
-                  color: Colors.green,
-                ),
-              ),
-              Divider(),
-              ListTile(
-                title: Text("CATEGORIES"),
-                leading: Icon(
-                  Icons.category,
-                  color: Colors.amber,
-                ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CategoryList(),
-                      ));
-                },
-              ),
-              Divider(),
-              ListTile(
-                title: Text("ALL ITEMS"),
-                leading: Icon(
-                  Icons.trolley,
-                  color: Colors.pink,
-                ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CategoriesPage(),
-                      ));
-                },
-              ),
-              Divider(),
-              ListTile(
-                title: Text("TABLES"),
-                leading: Icon(
-                  Icons.table_bar_outlined,
-                  color: Colors.purple,
-                ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TablesPage(),
-                      ));
-                },
-              ),
-              Divider(),
-              ListTile(
-                title: Text("SETTINGS"),
-                leading: Icon(
-                  Icons.settings,
-                  color: Colors.red,
-                ),
-                onTap: () {},
-              ),
-              ListTile(
-                title: Text("LOGOUT"),
-                leading: Icon(
-                  Icons.logout,
-                  color: Colors.blue,
-                ),
-                onTap: () {},
-              ),
-              Divider(),
-            ],
-          ),
-        ),
+        drawer: CustomDrawer().getDrawer(context: context),
         body: TabBarView(
           controller: _tabController,
           children: [
             isSendKitchen
                 ? Invoice()
-                : ElevatedButton(
-                    onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => CategoriesPage(),
-                      //   ),
-                      // );
-                    },
-                    child: Text("add items"),
-                  ),
+                : Container(
+                    child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Welcome back!"),
+                      Text("  "),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CategoriesPage(),
+                              ));
+                        },
+                        child: Text(
+                          "START",
+                          style: TextStyle(color: Colors.blue[800]),
+                        ),
+                      )
+                    ],
+                  )),
 
             // Content for Dine In tab
             Container(

@@ -47,21 +47,24 @@ class _SortedPageState extends State<SortedPage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ColorsUsed.appBarColor,
         leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(Icons.arrow_back_ios_new)),
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back_ios_new),
+        ),
         title: Text("${widget.selectedCategory}"),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: ColorsUsed.black,
         onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CartPage(),
-              ));
+            context,
+            MaterialPageRoute(
+              builder: (context) => CartPage(),
+            ),
+          );
 
           Provider.of<ProviderClass>(context, listen: false)
               .addtoCart(ids: selectedIndices);
@@ -86,7 +89,8 @@ class _SortedPageState extends State<SortedPage> {
                 List<Food> responseData = provider.responseData!.food!;
                 var categoryItems = responseData
                     .where(
-                        (food) => food.categoryName == widget.selectedCategory)
+                      (food) => food.categoryName == widget.selectedCategory,
+                    )
                     .toList();
 
                 return GridView.builder(
@@ -94,80 +98,125 @@ class _SortedPageState extends State<SortedPage> {
                     crossAxisCount: 2,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    mainAxisExtent: containerHeight,
+                    mainAxisExtent: containerHeight / 0.2,
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     var currentItem = categoryItems[index];
+
+                    // Check if the item is in the cart
+                    bool isInCart = provider.selectedItems
+                        .any((item) => item.id == currentItem.id);
+
+                    // Check if the item is disabled
+                    bool isDisabled =
+                        provider.idtoDisable.any((id) => id == currentItem.id);
+
                     return Column(
                       children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: ColorsUsed.borderColor),
-                          ),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: containerHeight * .5,
-                                color: Colors.green,
-                                child: Image.network(
-                                  currentItem.image ?? "",
-                                  fit: BoxFit.fill,
-                                  errorBuilder: (BuildContext context,
-                                      Object error, StackTrace? stackTrace) {
-                                    return Container(
-                                      color: Colors.grey,
-                                      child: Center(
-                                        child: Icon(Icons.error),
-                                      ),
-                                    );
-                                  },
-                                ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: isDisabled
+                                    ? Colors.grey
+                                    : ColorsUsed.borderColor,
                               ),
-                              Text(currentItem.productName ?? "Default"),
-                              Row(
-                                children: [
-                                  Text(
-                                    "Price ${currentItem.price}" ?? "Default",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  height: containerHeight * 0.5,
+                                  color: Colors.green,
+                                  child: Image.network(
+                                    currentItem.image ?? "",
+                                    fit: BoxFit.fill,
+                                    errorBuilder: (BuildContext context,
+                                        Object error, StackTrace? stackTrace) {
+                                      return Container(
+                                        color: Colors.grey,
+                                        child: Center(
+                                          child: Icon(Icons.error),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                  Spacer(),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        selectedIndices
-                                            .add(currentItem.id!.toInt());
-                                        print(
-                                            "selected indices are: ${selectedIndices}");
-                                        Provider.of<ProviderClass>(context,
-                                                listen: false)
-                                            .addtoCart(ids: selectedIndices);
-
-                                        setState(() {
-                                          if (selectedIndices.contains(index)) {
-                                            selectedIndices.remove(index);
-                                          } else {
-                                            selectedIndices.add(index);
-                                          }
-                                        });
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            selectedIndices.contains(index)
-                                                ? Colors.red
-                                                : Colors.green,
-                                      ),
-                                      child: Text(
-                                        selectedIndices.contains(index)
-                                            ? "Remove"
-                                            : "Addt",
+                                ),
+                                Text(currentItem.productName ?? "Default"),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "     Price ${currentItem.price}" ??
+                                          "Default",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    Spacer(),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ElevatedButton(
+                                        onPressed: isDisabled
+                                            ? () {
+                                                Provider.of<ProviderClass>(
+                                                        context,
+                                                        listen: false)
+                                                    .removeFromcart(
+                                                        index: index,
+                                                        currentCount:
+                                                            currentCount,
+                                                        priceofItem:
+                                                            currentItem.price);
+                                              }
+                                            : isInCart
+                                                ? () {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                            "Item already in cart."),
+                                                        duration: Duration(
+                                                            seconds: 2),
+                                                      ),
+                                                    );
+                                                  }
+                                                : () {
+                                                    selectedIndices.add(
+                                                        currentItem.id!
+                                                            .toInt());
+                                                    provider.addtoCart(
+                                                      ids: selectedIndices,
+                                                    );
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                            "Item added to cart."),
+                                                        duration: Duration(
+                                                            seconds: 2),
+                                                      ),
+                                                    );
+                                                  },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: isDisabled
+                                              ? Colors.grey
+                                              : isInCart
+                                                  ? Colors.red
+                                                  : Colors.green,
+                                        ),
+                                        child: Text(isInCart
+                                            ? "In Cart"
+                                            : isDisabled
+                                                ? "Disabled"
+                                                : "Add to Cart"),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],

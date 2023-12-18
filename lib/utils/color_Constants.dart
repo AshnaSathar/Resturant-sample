@@ -7,4 +7,5 @@ class ColorsUsed {
   static Color amber = Colors.yellow;
   static Color buttonColor = const Color.fromARGB(255, 39, 36, 36);
   static Color borderColor = const Color.fromARGB(31, 48, 48, 48);
+  static Color appBarColor = Colors.black;
 }

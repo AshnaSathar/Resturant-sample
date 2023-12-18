@@ -224,13 +224,24 @@ class _CartPageState extends State<CartPage> {
                                 backgroundColor: MaterialStatePropertyAll(
                                     ColorsUsed.buttonColor)),
                             onPressed: () {
-                              isSendKitchen = !isSendKitchen;
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomePage(),
-                                ),
-                              );
+                              if (Provider.of<ProviderClass>(context,
+                                      listen: false)
+                                  .selectedItems
+                                  .every((item) => item.count! > 0)) {
+                                isSendKitchen = !isSendKitchen;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => HomePage(),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          "You should choose an item count")),
+                                );
+                              }
                             },
                             child: Text("Send to kitchen"),
                           ),
@@ -251,8 +262,8 @@ class _CartPageState extends State<CartPage> {
                                   ColorsUsed.buttonColor),
                             ),
                             onPressed: () {
-                              // Provider.of<ProviderClass>(context, listen: false)
-                              //     .tableIndexOff(index:tableIndex );
+                              Provider.of<ProviderClass>(context, listen: false)
+                                  .tableIndexOff(index: tableIndex);
                             },
                             child: Text("Give Order"),
                           ),

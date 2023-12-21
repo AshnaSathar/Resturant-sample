@@ -5,6 +5,7 @@ import 'package:flutter_application_1/view/Login.dart';
 
 import 'package:provider/provider.dart';
 
+int? a;
 void main() {
   runApp(const MyApp());
 }

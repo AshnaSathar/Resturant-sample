@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
 import 'package:flutter_application_1/model/model.dart';
 import 'package:flutter_application_1/utils/color_Constants.dart';
-import 'package:flutter_application_1/view/cart.dart';
-import 'package:flutter_application_1/widgets/CustomAppBar.dart';
+import 'package:flutter_application_1/view/Cart_pages/cart.dart';
 import 'package:provider/provider.dart';
 
 class SortedPage extends StatefulWidget {
@@ -66,8 +65,9 @@ class _SortedPageState extends State<SortedPage> {
             ),
           );
 
-          Provider.of<ProviderClass>(context, listen: false)
-              .addtoCart(ids: selectedIndices);
+          // Provider.of<ProviderClass>(context, listen: false).addtoCart(
+          //   ids: selectedIndices,
+          // );
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text("Items added to cart."),
@@ -157,17 +157,18 @@ class _SortedPageState extends State<SortedPage> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: ElevatedButton(
                                         onPressed: isDisabled
-                                            ? () {
-                                                Provider.of<ProviderClass>(
-                                                        context,
-                                                        listen: false)
-                                                    .removeFromcart(
-                                                        index: index,
-                                                        currentCount:
-                                                            currentCount,
-                                                        priceofItem:
-                                                            currentItem.price);
-                                              }
+                                            ? null
+                                            // ? () {
+                                            //     Provider.of<ProviderClass>(
+                                            //             context,
+                                            //             listen: false)
+                                            //         .removeFromcart(
+                                            //             index: index,
+                                            //             currentCount:
+                                            //                 currentCount,
+                                            //             priceofItem:
+                                            //                 currentItem.price);
+                                            //   }
                                             : isInCart
                                                 ? () {
                                                     ScaffoldMessenger.of(
@@ -182,12 +183,16 @@ class _SortedPageState extends State<SortedPage> {
                                                     );
                                                   }
                                                 : () {
-                                                    selectedIndices.add(
-                                                        currentItem.id!
-                                                            .toInt());
-                                                    provider.addtoCart(
-                                                      ids: selectedIndices,
-                                                    );
+                                                    // selectedIndices.add(
+                                                    //     currentItem.id!
+                                                    //         .toInt());
+                                                    // provider.addtoCart(
+                                                    //   ids: selectedIndices,
+                                                    // );
+                                                    // isTakeAwayActive: Provider
+                                                    //         .of<ProviderClass>(
+                                                    //             context)
+                                                    //     .isTakeAwayActive);
                                                     ScaffoldMessenger.of(
                                                             context)
                                                         .showSnackBar(

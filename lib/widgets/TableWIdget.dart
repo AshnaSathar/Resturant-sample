@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/Table.dart';
 
 class CustomTableWidget extends StatelessWidget {
@@ -16,7 +17,7 @@ class CustomTableWidget extends StatelessWidget {
       child: Container(
         height: containerHeight,
         width: containerWidth,
-        color: isSelectedTable[index] ? Colors.green : Colors.red,
+        color: isSelectedTable[index] ? ColorsUsed.online : ColorsUsed.offline,
         child: Center(
             child: Text(
           "T${index + 1} ",

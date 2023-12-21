@@ -1,16 +1,16 @@
+// home.dart
+
 import 'package:flutter/material.dart';
+
 import 'package:flutter_application_1/utils/color_Constants.dart';
-import 'package:flutter_application_1/view/CategoryList.dart';
-import 'package:flutter_application_1/view/Table.dart';
-import 'package:flutter_application_1/view/cart.dart';
+
 import 'package:flutter_application_1/view/categories.dart';
-import 'package:flutter_application_1/view/invoice.dart';
 import 'package:flutter_application_1/widgets/CustomDrawer.dart';
+import 'package:flutter_application_1/view/Invoice_Pages/invoice.dart';
 import 'package:flutter_application_1/widgets/CustomeButton.dart';
-import 'package:lottie/lottie.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,13 +18,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  bool isExpanded = false;
+  late TabController tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -32,45 +31,18 @@ class _HomePageState extends State<HomePage>
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CategoriesPage(),
+                ));
+          },
+          child: Text("Add"),
+        ),
         appBar: AppBar(
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CategoriesPage(),
-                        ));
-                  },
-                  child: Icon(Icons.fastfood)),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CategoryList(),
-                        ));
-                  },
-                  child: Icon(Icons.category)),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CartPage(),
-                        ));
-                  },
-                  child: Icon(Icons.trolley)),
-            ),
-          ],
+          actions: [],
           title: Text(
             "Restaurant",
             style: TextStyle(color: ColorsUsed.text_Color_White),
@@ -78,12 +50,22 @@ class _HomePageState extends State<HomePage>
           backgroundColor: ColorsUsed.black,
           bottom: TabBar(
             indicatorColor: Colors.white,
-            controller: _tabController,
+            controller: tabController,
             tabs: [
-              Tab(
-                child: Text(
-                  "Dine in",
-                  style: TextStyle(color: ColorsUsed.text_Color_White),
+              GestureDetector(
+                // onTap: () {
+                //   Provider.of<ProviderClass>(context).tabchoice = true;
+                // },
+                child: GestureDetector(
+                  // onTap: () {
+                  //   Provider.of<ProviderClass>(context).tabchoice = false;
+                  // },
+                  child: Tab(
+                    child: Text(
+                      "Dine- in",
+                      style: TextStyle(color: ColorsUsed.text_Color_White),
+                    ),
+                  ),
                 ),
               ),
               Tab(
@@ -99,57 +81,78 @@ class _HomePageState extends State<HomePage>
         ),
         drawer: CustomDrawer().getDrawer(context: context),
         body: TabBarView(
-          controller: _tabController,
+          controller: tabController,
           children: [
-            isSendKitchen
-                ? Invoice()
-                : Container(
-                    child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Welcome back!"),
-                      Text("  "),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CategoriesPage(),
-                              ));
-                        },
-                        child: Text(
-                          "START",
-                          style: TextStyle(color: Colors.blue[800]),
-                        ),
-                      )
-                    ],
-                  )),
+            // Dine In Content
+            buildTabContent(isDineIn: true),
 
-            // Content for Dine In tab
-            Container(
-                child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Welcome back!"),
-                Text("  "),
-                InkWell(
-                  onTap: () {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CategoriesPage(),
-                        ));
-                  },
-                  child: Text(
-                    "START",
-                    style: TextStyle(color: Colors.blue[800]),
-                  ),
-                )
-              ],
-            )),
+            // Take Away Content
+            buildTabContent(isDineIn: false),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildTabContent({required bool isDineIn}) {
+    if (isDineIn) {
+      return isSendKitchenDineIn
+          ? Invoice()
+          : Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Welcome back Dine In!"),
+                  Text("  "),
+                  // InkWell(
+                  // onTap: () {
+                  //   Provider.of<ProviderClass>(context, listen: false)
+                  //       .updateTabChoice(true);
+
+                  //   Navigator.pushReplacement(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => CategoriesPage(),
+                  //     ),
+                  //   );
+                  // },
+                  // child: Text(
+                  //   "START",
+                  //   style: TextStyle(color: Colors.blue[800]),
+                  // ),
+                  // )
+                ],
+              ),
+            );
+    } else {
+      return isSendKitchenTakeAway
+          ? Invoice()
+          : Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Welcome back Take Away!"),
+                  Text("  "),
+                  // InkWell(
+                  //   onTap: () {
+                  //     Provider.of<ProviderClass>(context, listen: false)
+                  //         .updateTabChoice(false);
+
+                  //     Navigator.pushReplacement(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => CategoriesPage(),
+                  //       ),
+                  //     );
+                  //   },
+                  //   child: Text(
+                  //     "START",
+                  //     style: TextStyle(color: Colors.blue[800]),
+                  //   ),
+                  // )
+                ],
+              ),
+            );
+    }
   }
 }

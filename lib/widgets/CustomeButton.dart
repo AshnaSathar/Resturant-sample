@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/Table.dart';
 
 bool isSendKitchen = false;
+bool isSendKitchenDineIn = false;
+bool isSendKitchenTakeAway = false;
 
 class ButtonWidget extends StatelessWidget {
   final title;
@@ -10,9 +13,13 @@ class ButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: ElevatedButton(
-        style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(Colors.black)),
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: ColorsUsed.buttonColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
         onPressed: () {
           if (title == "Login" || title == "login") {
             Navigator.pushReplacement(
@@ -23,7 +30,10 @@ class ButtonWidget extends StatelessWidget {
             );
           }
         },
-        child: Text(title),
+        child: Text(
+          title,
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }

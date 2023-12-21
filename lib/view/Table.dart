@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
+import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/Home.dart';
 import 'package:flutter_application_1/widgets/CustomAppBar.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,7 @@ class _TablesPageState extends State<TablesPage> {
     CustomAppBar appBarObject = CustomAppBar();
 
     return Scaffold(
+      backgroundColor: ColorsUsed.backgroundColor,
       appBar: appBarObject.getAppBar(
         title: "Table",
       ),

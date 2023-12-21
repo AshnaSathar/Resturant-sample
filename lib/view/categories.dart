@@ -1,9 +1,10 @@
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
+
 import 'package:flutter_application_1/model/model.dart';
 import 'package:flutter_application_1/utils/color_Constants.dart';
-import 'package:flutter_application_1/view/cart.dart';
+import 'package:flutter_application_1/view/Cart_pages/cart.dart';
 import 'package:flutter_application_1/view/sortedList.dart';
 import 'package:provider/provider.dart';
 
@@ -191,7 +192,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       crossAxisCount: 2,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 20,
-                      mainAxisExtent: containerHeight,
+                      mainAxisExtent: 250,
                     ),
                     itemBuilder: (BuildContext context, int index) {
                       var currentItem = responseData[index];
@@ -245,6 +246,37 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                         ),
                                       ),
                                       Spacer(),
+                                      // Switch(
+                                      //   value: currentItem.isTakeAwayActive ??
+                                      //       true,
+                                      //   onChanged: (value) {
+                                      //     setState(() {
+                                      //       print(currentItem.isTakeAwayActive);
+                                      //       currentItem.isTakeAwayActive =
+                                      //           value;
+                                      //     });
+                                      //   },
+                                      // ),
+                                      Switch(
+                                        value: currentItem.isTakeAwayActive,
+                                        onChanged: (value) {
+                                          print("the value is $value");
+                                          currentItem.isTakeAwayActive = value;
+                                          print(
+                                              "${currentItem.productName}====${currentItem.isTakeAwayActive}");
+                                          setState(() {});
+
+                                          Provider.of<ProviderClass>(context,
+                                                  listen: false)
+                                              .updateTabChoice(isDineIn: value);
+                                        },
+                                        activeColor: Colors.green,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: ElevatedButton(
@@ -253,42 +285,57 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                                   MaterialStateProperty
                                                       .resolveWith<Color>(
                                                 (Set<MaterialState> states) {
-                                                  // Change the button color based on whether the item is in the cart
                                                   return isInCart
                                                       ? Colors.red
                                                       : Colors.green;
                                                 },
                                               ),
                                             ),
+                                            // onPressed: isInCart
+                                            //     ? null
+                                            //     : () {
+                                            //         selectedIndices
+                                            //             .add(index + 1);
+                                            //         Provider.of<ProviderClass>(
+                                            //                 context,
+                                            //                 listen: false)
+                                            //             .addtoCart(
+                                            //           ids: selectedIndices,
+                                            //         );
+                                            //       },
                                             onPressed: isInCart
-                                                ? () {
-                                                    Provider.of<ProviderClass>(
-                                                            context,
-                                                            listen: false)
-                                                        .removeFromcart(
-                                                            index: index,
-                                                            currentCount:
-                                                                currentCount,
-                                                            priceofItem:
-                                                                currentItem
-                                                                    .price);
-                                                  } // Disable the button if the item is already in the cart
+                                                ? null
                                                 : () {
+                                                    print("Button pressed");
+                                                    print(
+                                                        "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
+
                                                     selectedIndices
                                                         .add(index + 1);
+                                                    print(
+                                                        "selected indices are $selectedIndices");
+
+                                                    List<Map<String, dynamic>>
+                                                        itemsToAdd = [
+                                                      {
+                                                        "id": index + 1,
+                                                        "isTakeAway": currentItem
+                                                            .isTakeAwayActive
+                                                      },
+                                                    ];
+
                                                     Provider.of<ProviderClass>(
-                                                            context,
-                                                            listen: false)
-                                                        .addtoCart(
-                                                      ids: selectedIndices,
-                                                    );
+                                                      context,
+                                                      listen: false,
+                                                    ).addtoCart(
+                                                        itemsToAdd: itemsToAdd);
                                                   },
                                             child: isInCart
                                                 ? Text("In Cart")
                                                 : Text("ADD")),
                                       ),
                                     ],
-                                  ),
+                                  )
                                 ],
                               ),
                             ),

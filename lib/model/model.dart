@@ -37,6 +37,7 @@ class Food {
   String? categoryName;
   int? count;
   bool? isEnabled;
+  bool isTakeAwayActive;
 
   Food(
       {this.id,
@@ -44,6 +45,7 @@ class Food {
       this.price,
       this.productName,
       this.categoryName,
+      this.isTakeAwayActive = false,
       this.count = 0,
       this.isEnabled = true});
 

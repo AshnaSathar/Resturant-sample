@@ -176,7 +176,6 @@ class _CartTakeAwayState extends State<CartTakeAway> {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                     onPressed: () {
-                      Provider.of<ProviderClass>(context).tabchoice = false;
                       Navigator.push(
                           context,
                           MaterialPageRoute(

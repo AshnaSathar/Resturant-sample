@@ -178,7 +178,6 @@ class _CartDineInState extends State<CartDineIn> {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                     onPressed: () {
-                      Provider.of<ProviderClass>(context).tabchoice = true;
                       Navigator.push(
                           context,
                           MaterialPageRoute(

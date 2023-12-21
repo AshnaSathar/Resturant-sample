@@ -198,8 +198,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       var currentItem = responseData[index];
 
                       // Check if the item is in the cart
-                      bool isInCart = provider.selectedItems
-                          .any((item) => item.id == currentItem.id);
+                      // bool isInCart = provider.selectedItems
+                      //     .any((item) => item.id == currentItem.id);
 
                       return Column(
                         children: [
@@ -280,59 +280,31 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: ElevatedButton(
-                                            style: ButtonStyle(
-                                              backgroundColor:
-                                                  MaterialStateProperty
-                                                      .resolveWith<Color>(
-                                                (Set<MaterialState> states) {
-                                                  return isInCart
-                                                      ? Colors.red
-                                                      : Colors.green;
-                                                },
-                                              ),
-                                            ),
-                                            // onPressed: isInCart
-                                            //     ? null
-                                            //     : () {
-                                            //         selectedIndices
-                                            //             .add(index + 1);
-                                            //         Provider.of<ProviderClass>(
-                                            //                 context,
-                                            //                 listen: false)
-                                            //             .addtoCart(
-                                            //           ids: selectedIndices,
-                                            //         );
-                                            //       },
-                                            onPressed: isInCart
-                                                ? null
-                                                : () {
-                                                    print("Button pressed");
-                                                    print(
-                                                        "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
+                                          onPressed: () {
+                                            print("Button pressed");
+                                            print(
+                                                "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
 
-                                                    selectedIndices
-                                                        .add(index + 1);
-                                                    print(
-                                                        "selected indices are $selectedIndices");
+                                            selectedIndices.add(index + 1);
+                                            print(
+                                                "selected indices are $selectedIndices");
 
-                                                    List<Map<String, dynamic>>
-                                                        itemsToAdd = [
-                                                      {
-                                                        "id": index + 1,
-                                                        "isTakeAway": currentItem
-                                                            .isTakeAwayActive
-                                                      },
-                                                    ];
+                                            List<Map<String, dynamic>>
+                                                itemsToAdd = [
+                                              {
+                                                "id": index + 1,
+                                                "isTakeAway":
+                                                    currentItem.isTakeAwayActive
+                                              },
+                                            ];
 
-                                                    Provider.of<ProviderClass>(
-                                                      context,
-                                                      listen: false,
-                                                    ).addtoCart(
-                                                        itemsToAdd: itemsToAdd);
-                                                  },
-                                            child: isInCart
-                                                ? Text("In Cart")
-                                                : Text("ADD")),
+                                            Provider.of<ProviderClass>(
+                                              context,
+                                              listen: false,
+                                            ).addtoCart(itemsToAdd: itemsToAdd);
+                                          },
+                                          child: Text("ADD"),
+                                        ),
                                       ),
                                     ],
                                   )

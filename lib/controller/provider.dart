@@ -87,59 +87,6 @@ class ProviderClass with ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> increment(
-  //     {required int id, required currentCount, required priceofItem}) async {
-  //   print("inside increment");
-  //   selectedItems = selectedItems[id].isTakeAwayActive
-  //       ? selectedItemsForTakeAway
-  //       : selectedItemsForDineIn;
-  //   selectedItems[id].count = currentCount + 1;
-
-  //   double priceInt = double.parse(priceofItem);
-  //   double incrementSum = 1 * priceInt;
-
-  //   totalSum += incrementSum;
-  //   print("Total Sum: $totalSum");
-
-  //   notifyListeners();
-  // }
-
-  // Future<void> increment(
-  //     {required int id, required currentCount, required priceofItem}) async {
-  //   print("inside increment");
-  //   // selectedItems = selectedItems[id].isTakeAwayActive
-  //   //     ? selectedItemsForTakeAway
-  //   //     : selectedItemsForDineIn;
-  //   print(
-  //       "product name check inside increment ${selectedItems[id].productName}");
-  //   selectedItems[id].count = currentCount + 1;
-
-  //   double priceInt = double.parse(priceofItem);
-  //   double incrementSum = 1 * priceInt;
-
-  //   totalSum += incrementSum;
-  //   print("Total Sum: $totalSum");
-
-  //   notifyListeners();
-  // }
-
-  // Future<void> decrement(
-  //     {required int index, required currentCount, required priceofItem}) async {
-  //   selectedItems = selectedItems[index].isTakeAwayActive
-  //       ? selectedItemsForTakeAway
-  //       : selectedItemsForDineIn;
-
-  //   if (currentCount >= 0) {
-  //     selectedItems[index].count = currentCount - 1;
-  //     double priceInt = double.parse(priceofItem);
-  //     double decrementSum = 1 * priceInt;
-  //     totalSum -= decrementSum;
-  //     print("Total Sum: $totalSum");
-
-  //     // tofindTotal();
-  //     notifyListeners();
-  //   }
-  // }
   Future<void> increment(
       {required int id,
       required currentCount,
@@ -214,17 +161,6 @@ class ProviderClass with ChangeNotifier {
       notifyListeners();
     }
   }
-
-  // void removeFromcart(
-  //     {required index, required currentCount, required priceofItem}) {
-  //   print('invoking');
-  //   selectedItems = selectedItems[index].isTakeAwayActive
-  //       ? selectedItemsForTakeAway
-  //       : selectedItemsForDineIn;
-
-  //   selectedItemsForDineIn.removeAt(index);
-  //   notifyListeners();
-  // }
 
   void totalPriceSub(
       {required int index, required currentCount, required priceofItem}) {

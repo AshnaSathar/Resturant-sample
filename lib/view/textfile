@@ -298,3 +298,25 @@
 //     return Container();
 //   }
 // }
+ // void addtoCart({required List<int?> ids}) {
+  //   List<Food>? allItems = responseData?.food;
+  //   List<Food> selectedItemsList =
+  //       tabchoice! ? selectedItemsForDineIn : selectedItemsForTakeAway;
+  //   for (int? id in ids) {
+  //     if (id != null) {
+  //       bool itemExists = selectedItemsList.any((item) => item.id == id);
+
+  //       if (!itemExists) {
+  //         var newItem = allItems?.firstWhere((item) => id == item.id,
+  //             orElse: () => Food());
+
+  //         newItem?.isEnabled = !sharedDisabledIds.contains(id);
+
+  //         selectedItemsList.add(newItem ?? Food());
+
+  //         sharedDisabledIds.add(id);
+  //       }
+  //     }
+  //   }
+
+  //   notifyListeners();

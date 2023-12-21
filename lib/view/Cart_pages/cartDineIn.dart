@@ -67,6 +67,7 @@ class _CartDineInState extends State<CartDineIn> {
                           children: [
                             InkWell(
                               onTap: () {
+                                print("+ icon pressed");
                                 print("index is $index");
                                 try {
                                   double price =
@@ -80,9 +81,10 @@ class _CartDineInState extends State<CartDineIn> {
                                   Provider.of<ProviderClass>(context,
                                           listen: false)
                                       .increment(
-                                          index: index,
-                                          currentCount: currentCount,
-                                          priceofItem: currentItem.price);
+                                    id: currentItem.id!,
+                                    currentCount: currentCount,
+                                    priceofItem: currentItem.price,
+                                  );
                                   setState(() {});
                                 } catch (e) {
                                   print("Error parsing price: $e");
@@ -105,7 +107,9 @@ class _CartDineInState extends State<CartDineIn> {
                                   Provider.of<ProviderClass>(context,
                                           listen: false)
                                       .removeFromcart(
-                                          index: index,
+                                          id: currentItem.id!,
+                                          isTakeAwayActive:
+                                              currentItem.isTakeAwayActive,
                                           currentCount: currentCount,
                                           priceofItem:
                                               selectedItemsD[index].price);
@@ -132,7 +136,7 @@ class _CartDineInState extends State<CartDineIn> {
                                     Provider.of<ProviderClass>(context,
                                             listen: false)
                                         .decrement(
-                                            index: index,
+                                            id: currentItem.id!,
                                             currentCount: currentCount,
                                             priceofItem: currentItem.price);
                                   } else {

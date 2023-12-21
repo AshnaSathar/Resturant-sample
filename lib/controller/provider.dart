@@ -46,29 +46,6 @@ class ProviderClass with ChangeNotifier {
     }
   }
 
-  // void addtoCart({required List<int?> ids}) {
-  //   List<Food>? allItems = responseData?.food;
-  //   List<Food> selectedItemsList =
-  //       tabchoice! ? selectedItemsForDineIn : selectedItemsForTakeAway;
-  //   for (int? id in ids) {
-  //     if (id != null) {
-  //       bool itemExists = selectedItemsList.any((item) => item.id == id);
-
-  //       if (!itemExists) {
-  //         var newItem = allItems?.firstWhere((item) => id == item.id,
-  //             orElse: () => Food());
-
-  //         newItem?.isEnabled = !sharedDisabledIds.contains(id);
-
-  //         selectedItemsList.add(newItem ?? Food());
-
-  //         sharedDisabledIds.add(id);
-  //       }
-  //     }
-  //   }
-
-  //   notifyListeners();
-
   void addtoCart({required List<Map<dynamic, dynamic>> itemsToAdd}) {
     print(itemsToAdd);
     List<Food>? allItems = responseData?.food;
@@ -110,49 +87,144 @@ class ProviderClass with ChangeNotifier {
     notifyListeners();
   }
 
+  // Future<void> increment(
+  //     {required int id, required currentCount, required priceofItem}) async {
+  //   print("inside increment");
+  //   selectedItems = selectedItems[id].isTakeAwayActive
+  //       ? selectedItemsForTakeAway
+  //       : selectedItemsForDineIn;
+  //   selectedItems[id].count = currentCount + 1;
+
+  //   double priceInt = double.parse(priceofItem);
+  //   double incrementSum = 1 * priceInt;
+
+  //   totalSum += incrementSum;
+  //   print("Total Sum: $totalSum");
+
+  //   notifyListeners();
+  // }
+
+  // Future<void> increment(
+  //     {required int id, required currentCount, required priceofItem}) async {
+  //   print("inside increment");
+  //   // selectedItems = selectedItems[id].isTakeAwayActive
+  //   //     ? selectedItemsForTakeAway
+  //   //     : selectedItemsForDineIn;
+  //   print(
+  //       "product name check inside increment ${selectedItems[id].productName}");
+  //   selectedItems[id].count = currentCount + 1;
+
+  //   double priceInt = double.parse(priceofItem);
+  //   double incrementSum = 1 * priceInt;
+
+  //   totalSum += incrementSum;
+  //   print("Total Sum: $totalSum");
+
+  //   notifyListeners();
+  // }
+
+  // Future<void> decrement(
+  //     {required int index, required currentCount, required priceofItem}) async {
+  //   selectedItems = selectedItems[index].isTakeAwayActive
+  //       ? selectedItemsForTakeAway
+  //       : selectedItemsForDineIn;
+
+  //   if (currentCount >= 0) {
+  //     selectedItems[index].count = currentCount - 1;
+  //     double priceInt = double.parse(priceofItem);
+  //     double decrementSum = 1 * priceInt;
+  //     totalSum -= decrementSum;
+  //     print("Total Sum: $totalSum");
+
+  //     // tofindTotal();
+  //     notifyListeners();
+  //   }
+  // }
   Future<void> increment(
-      {required int index, required currentCount, required priceofItem}) async {
+      {required int id,
+      required currentCount,
+      required priceofItem,
+      required}) async {
     print("inside increment");
-    selectedItems =
-        tabchoice! ? selectedItemsForDineIn : selectedItemsForTakeAway;
-    selectedItems[index].count = currentCount + 1;
+
+    var selectedItem = selectedItems.firstWhere((item) => item.id == id);
+
+    selectedItem.count = currentCount + 1;
 
     double priceInt = double.parse(priceofItem);
     double incrementSum = 1 * priceInt;
 
     totalSum += incrementSum;
     print("Total Sum: $totalSum");
-    // tofindTotal();
+
     notifyListeners();
   }
 
   Future<void> decrement(
-      {required int index, required currentCount, required priceofItem}) async {
-    selectedItems =
-        tabchoice! ? selectedItemsForDineIn : selectedItemsForTakeAway;
+      {required int id, required currentCount, required priceofItem}) async {
+    var selectedItem = selectedItems.firstWhere((item) => item.id == id);
 
-    if (currentCount! > 0) {
-      selectedItems[index].count = currentCount - 1;
+    if (currentCount >= 1) {
+      selectedItem.count = currentCount - 1;
       double priceInt = double.parse(priceofItem);
       double decrementSum = 1 * priceInt;
       totalSum -= decrementSum;
       print("Total Sum: $totalSum");
 
-      // tofindTotal();
+      notifyListeners();
+    } else {
+      removeFromcart(
+          id: id,
+          currentCount: currentCount,
+          priceofItem: priceofItem,
+          isTakeAwayActive: selectedItems[id].isTakeAwayActive);
+    }
+  }
+
+  Future<void> removeFromcart({
+    required int id,
+    required int currentCount,
+    required var priceofItem,
+    required bool isTakeAwayActive,
+  }) async {
+    int selectedIndex = -1;
+
+    // Find the index of the item to be removed
+    for (int i = 0; i < selectedItems.length; i++) {
+      if (selectedItems[i].id == id) {
+        selectedIndex = i;
+        break;
+      }
+    }
+
+    if (selectedIndex != -1 && currentCount >= 1) {
+      var removedItem = selectedItems.removeAt(selectedIndex);
+
+      if (isTakeAwayActive) {
+        selectedItemsForTakeAway.remove(removedItem);
+      } else {
+        selectedItemsForDineIn.remove(removedItem);
+      }
+
+      double priceInt = double.parse(priceofItem.toString());
+      double decrementSum = currentCount * priceInt;
+      totalSum -= decrementSum;
+      print("Total Sum: $totalSum");
+
       notifyListeners();
     }
   }
 
-  void removeFromcart(
-      {required index, required currentCount, required priceofItem}) {
-    print('invoking');
-    selectedItems =
-        tabchoice! ? selectedItemsForDineIn : selectedItemsForTakeAway;
-    // tofindTotal();
+  // void removeFromcart(
+  //     {required index, required currentCount, required priceofItem}) {
+  //   print('invoking');
+  //   selectedItems = selectedItems[index].isTakeAwayActive
+  //       ? selectedItemsForTakeAway
+  //       : selectedItemsForDineIn;
 
-    selectedItemsForDineIn.removeAt(index);
-    notifyListeners();
-  }
+  //   selectedItemsForDineIn.removeAt(index);
+  //   notifyListeners();
+  // }
 
   void totalPriceSub(
       {required int index, required currentCount, required priceofItem}) {

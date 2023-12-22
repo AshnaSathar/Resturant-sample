@@ -81,6 +81,7 @@ class _CartDineInState extends State<CartDineIn> {
                                   Provider.of<ProviderClass>(context,
                                           listen: false)
                                       .increment(
+                                    isTakeAwayActive: false,
                                     id: currentItem.id!,
                                     currentCount: currentCount,
                                     priceofItem: currentItem.price,
@@ -108,11 +109,11 @@ class _CartDineInState extends State<CartDineIn> {
                                           listen: false)
                                       .removeFromcart(
                                           id: currentItem.id!,
-                                          isTakeAwayActive:
-                                              currentItem.isTakeAwayActive,
+                                          isTakeAwayActive: false,
                                           currentCount: currentCount,
                                           priceofItem:
                                               selectedItemsD[index].price);
+                                  setState(() {});
                                 } catch (e) {
                                   print("Error parsing price: $e");
                                 }
@@ -136,6 +137,7 @@ class _CartDineInState extends State<CartDineIn> {
                                     Provider.of<ProviderClass>(context,
                                             listen: false)
                                         .decrement(
+                                            isTakeAwayActive: false,
                                             id: currentItem.id!,
                                             currentCount: currentCount,
                                             priceofItem: currentItem.price);

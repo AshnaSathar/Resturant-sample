@@ -20,10 +20,10 @@ class _SortPageItemState extends State<SortPageItem> {
     var containerWidth = MediaQuery.of(context).size.width * 0.25;
 
     var currentItem = widget.currentItem;
-    var provider = Provider.of<ProviderClass>(context, listen: false);
+    // var provider = Provider.of<ProviderClass>(context, listen: false);
 
-    bool isInCart =
-        provider.selectedItems.any((item) => item.id == currentItem.id);
+    // bool isInCart =
+    //     provider.selectedItems.any((item) => item.id == currentItem.id);
 
     return Column(
       children: [
@@ -68,15 +68,15 @@ class _SortPageItemState extends State<SortPageItem> {
                       ),
                     ),
                     Spacer(),
-                    Switch(
-                      value: currentItem.isTakeAwayActive,
-                      onChanged: (value) {
-                        currentItem.isTakeAwayActive = value;
-                        provider.updateTabChoice(isDineIn: value);
-                        setState(() {});
-                      },
-                      activeColor: Colors.green,
-                    ),
+                    // Switch(
+                    //   value: currentItem.isTakeAwayActive,
+                    //   onChanged: (value) {
+                    //     currentItem.isTakeAwayActive = value;
+                    //     provider.updateTabChoice(isDineIn: value);
+                    //     setState(() {});
+                    //   },
+                    //   activeColor: Colors.green,
+                    // ),
                   ],
                 ),
                 Row(
@@ -93,13 +93,43 @@ class _SortPageItemState extends State<SortPageItem> {
                           List<Map<String, dynamic>> itemsToAdd = [
                             {
                               "id": currentItem.id,
-                              "isTakeAway": currentItem.isTakeAwayActive,
+                              "isTakeAway": currentItem.isTakeAwayActive
                             },
                           ];
 
-                          provider.addtoCart(itemsToAdd: itemsToAdd);
+                          Provider.of<ProviderClass>(
+                            context,
+                            listen: false,
+                          ).addtoCart(itemsToAdd: itemsToAdd);
                         },
-                        child: isInCart ? Text("In Cart") : Text("ADD"),
+                        child: Text("Dine In"),
+                      ),
+                    ),
+                    Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          currentItem.isTakeAwayActive = true;
+                          Provider.of<ProviderClass>(context, listen: false)
+                              .updateTabChoice(isDineIn: false);
+                          print("Button pressed");
+                          print(
+                              "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
+
+                          List<Map<String, dynamic>> itemsToAdd = [
+                            {
+                              "id": currentItem.id,
+                              "isTakeAway": currentItem.isTakeAwayActive
+                            },
+                          ];
+
+                          Provider.of<ProviderClass>(
+                            context,
+                            listen: false,
+                          ).addtoCart(itemsToAdd: itemsToAdd);
+                        },
+                        child: Text("Take Away"),
                       ),
                     ),
                   ],

@@ -80,6 +80,7 @@ class _CartTakeAwayState extends State<CartTakeAway> {
                                   Provider.of<ProviderClass>(context,
                                           listen: false)
                                       .increment(
+                                          isTakeAwayActive: true,
                                           id: currentItem.id!,
                                           currentCount: currentCount,
                                           priceofItem: currentItem.price);
@@ -106,8 +107,7 @@ class _CartTakeAwayState extends State<CartTakeAway> {
                                           listen: false)
                                       .removeFromcart(
                                           id: currentItem.id!,
-                                          isTakeAwayActive:
-                                              currentItem.isTakeAwayActive,
+                                          isTakeAwayActive: true,
                                           currentCount: currentCount,
                                           priceofItem:
                                               selectedItemsT[index].price);
@@ -134,6 +134,7 @@ class _CartTakeAwayState extends State<CartTakeAway> {
                                     Provider.of<ProviderClass>(context,
                                             listen: false)
                                         .decrement(
+                                            isTakeAwayActive: true,
                                             id: currentItem.id!,
                                             currentCount: currentCount,
                                             priceofItem: currentItem.price);

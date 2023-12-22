@@ -109,7 +109,7 @@ class _CategoryListState extends State<CategoryList> {
                               child: Container(
                                 height: 25,
                                 child: Text(
-                                  categoryNames[categoryIndex] ?? "default",
+                                  categoryNames[categoryIndex],
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),

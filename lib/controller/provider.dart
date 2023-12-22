@@ -21,7 +21,8 @@ class ProviderClass with ChangeNotifier {
   List<int> sharedDisabledIds = [];
   bool? tabchoice;
   bool? isTakeAwayActive;
-
+  var totalPriceForDineIn;
+  var totalPriceForTakeAway;
   set isSendKitchen(bool isSendKitchen) {}
 
   Future<void> fetchData() async {
@@ -54,25 +55,31 @@ class ProviderClass with ChangeNotifier {
       int id = itemData['id'] as int;
       bool isTakeAwayActiveValue = itemData['isTakeAway'] as bool;
       print(isTakeAwayActiveValue);
-      bool itemExists = selectedItems.any((item) => item.id == id);
+
+      bool itemExists = isTakeAwayActiveValue
+          ? selectedItemsForTakeAway.any((item) => item.id == id)
+          : selectedItemsForDineIn.any((item) => item.id == id);
 
       if (!itemExists) {
         var newItem =
             allItems?.firstWhere((item) => id == item.id, orElse: () => Food());
-
         newItem?.isEnabled = !sharedDisabledIds.contains(id);
-        selectedItems.add(newItem ?? Food());
-
-        sharedDisabledIds.add(id);
 
         if (isTakeAwayActiveValue) {
           print("inside second if");
-          print("selected item for dine-in: ${selectedItemsForTakeAway}");
+          print("selected item for take away: ${selectedItemsForTakeAway}");
           selectedItemsForTakeAway.add(newItem!);
         } else {
-          print("selected item for take away are: ${selectedItemsForDineIn}");
+          print("selected item for dine-in are: ${selectedItemsForDineIn}");
           selectedItemsForDineIn.add(newItem!);
         }
+
+        // Perform common operations if needed
+        sharedDisabledIds.add(id);
+        selectedItems.add(newItem);
+
+        // ...
+
         for (var i = 0; i < selectedItemsForTakeAway.length; i++) {
           print("items are ${selectedItemsForTakeAway[i].productName}");
         }
@@ -87,18 +94,36 @@ class ProviderClass with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> increment(
-      {required int id,
-      required currentCount,
-      required priceofItem,
-      required}) async {
+  Future<void> increment({
+    required int id,
+    required int currentCount,
+    required dynamic priceofItem,
+    required bool isTakeAwayActive,
+  }) async {
     print("inside increment");
+    print("isTakeAway=$isTakeAwayActive");
 
-    var selectedItem = selectedItems.firstWhere((item) => item.id == id);
+    // Choose the appropriate list based on isTakeAwayActive
+    List<Food> selectedItemList =
+        isTakeAwayActive ? selectedItemsForTakeAway : selectedItemsForDineIn;
 
-    selectedItem.count = currentCount + 1;
+    var selectedItem = selectedItemList.firstWhere((item) => item.id == id);
 
-    double priceInt = double.parse(priceofItem);
+    // Create a new instance to avoid shared references
+    var updatedItem = Food(
+      id: selectedItem.id,
+      productName: selectedItem.productName,
+      price: selectedItem.price,
+      count: currentCount + 1,
+      isTakeAwayActive: selectedItem.isTakeAwayActive,
+      // Add other properties from your Food class
+    );
+
+    // Replace the old item with the updated one
+    int index = selectedItemList.indexOf(selectedItem);
+    selectedItemList[index] = updatedItem;
+
+    double priceInt = double.parse(priceofItem.toString());
     double incrementSum = 1 * priceInt;
 
     totalSum += incrementSum;
@@ -107,74 +132,72 @@ class ProviderClass with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> decrement(
-      {required int id, required currentCount, required priceofItem}) async {
-    var selectedItem = selectedItems.firstWhere((item) => item.id == id);
-
-    if (currentCount >= 1) {
-      selectedItem.count = currentCount - 1;
-      double priceInt = double.parse(priceofItem);
-      double decrementSum = 1 * priceInt;
-      totalSum -= decrementSum;
-      print("Total Sum: $totalSum");
-
-      notifyListeners();
-    } else {
-      removeFromcart(
-          id: id,
-          currentCount: currentCount,
-          priceofItem: priceofItem,
-          isTakeAwayActive: selectedItems[id].isTakeAwayActive);
-    }
-  }
-
-  Future<void> removeFromcart({
+  Future<void> decrement({
     required int id,
     required int currentCount,
-    required var priceofItem,
+    required dynamic priceofItem, // Assuming priceofItem can be of any type
     required bool isTakeAwayActive,
   }) async {
-    int selectedIndex = -1;
+    print("inside increment");
+    print("isTakeAway=$isTakeAwayActive");
 
-    // Find the index of the item to be removed
-    for (int i = 0; i < selectedItems.length; i++) {
-      if (selectedItems[i].id == id) {
-        selectedIndex = i;
-        break;
-      }
-    }
+    // Choose the appropriate list based on isTakeAwayActive
+    var selectedItemList =
+        isTakeAwayActive ? selectedItemsForTakeAway : selectedItemsForDineIn;
 
-    if (selectedIndex != -1 && currentCount >= 1) {
-      var removedItem = selectedItems.removeAt(selectedIndex);
+    var selectedItem = selectedItemList.firstWhere((item) => item.id == id);
 
-      if (isTakeAwayActive) {
-        selectedItemsForTakeAway.remove(removedItem);
-      } else {
-        selectedItemsForDineIn.remove(removedItem);
-      }
+    selectedItem.count = currentCount - 1;
 
-      double priceInt = double.parse(priceofItem.toString());
-      double decrementSum = currentCount * priceInt;
-      totalSum -= decrementSum;
-      print("Total Sum: $totalSum");
-
-      notifyListeners();
-    }
-  }
-
-  void totalPriceSub(
-      {required int index, required currentCount, required priceofItem}) {
-    var amount = currentCount;
-    print("current count is $currentCount");
-    double priceInt =
-        double.tryParse(selectedItemsForDineIn[index].price!) ?? 0.0;
-    double decrementSum = amount! * priceInt;
+    double priceInt = double.parse(
+        priceofItem.toString()); // Assuming priceofItem is a string
+    double decrementSum = 1 * priceInt;
 
     totalSum -= decrementSum;
-
     print("Total Sum: $totalSum");
 
     notifyListeners();
+  }
+
+  void removeFromcart({
+    required id,
+    required isTakeAwayActive,
+    required currentCount,
+    required priceofItem,
+  }) {
+    if (isTakeAwayActive) {
+      selectedItemsForTakeAway.removeWhere((item) => item.id == id);
+    } else {
+      selectedItemsForDineIn.removeWhere((item) => item.id == id);
+    }
+
+    // Update selectedItems list without the removed item
+    selectedItems.removeWhere((item) => item.id == id);
+    var amount;
+    var amount2;
+    // double totalSum = 0;
+    print("total sum before=====$totalSum");
+    for (var item in selectedItemsForDineIn) {
+      amount = double.parse(item.price!) * item.count!;
+      print("amount is $amount");
+    }
+    print("totalSum is$totalSum");
+    for (var item in selectedItemsForTakeAway) {
+      amount2 = double.parse(item.price!) * item.count!;
+      print("amount 2=$amount2");
+    }
+    var totalPricetoDecrease = amount + amount2;
+    totalSum = totalSum - totalPricetoDecrease;
+    notifyListeners();
+  }
+
+  int findIndexById(int id, List<Food> items) {
+    for (int i = 0; i < items.length; i++) {
+      if (items[i].id == id) {
+        return i;
+      }
+    }
+    return -1; // Return -1 if the item is not found
   }
 
   void tableIndexOn({required index}) {

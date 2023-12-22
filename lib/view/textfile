@@ -320,3 +320,31 @@
   //   }
 
   //   notifyListeners();
+
+  // 
+
+  // Future<void> decrement({
+  //   required int id,
+  //   required int currentCount,
+  //   required dynamic priceofItem, // Assuming priceofItem can be of any type
+  // }) async {
+  //   var selectedItem = selectedItems.firstWhere((item) => item.id == id);
+
+  //   if (currentCount > 1) {
+  //     selectedItem.count = currentCount - 1;
+  //     double priceInt = double.parse(
+  //         priceofItem.toString()); // Assuming priceofItem is a string
+  //     double decrementSum = 1 * priceInt;
+  //     totalSum -= decrementSum;
+  //     print("Total Sum: $totalSum");
+  //   } else {
+  //     removeFromcart(
+  //       id: id,
+  //       currentCount: currentCount,
+  //       priceofItem: priceofItem,
+  //       isTakeAwayActive: selectedItem.isTakeAwayActive,
+  //     );
+  //   }
+
+  //   notifyListeners();
+  // }

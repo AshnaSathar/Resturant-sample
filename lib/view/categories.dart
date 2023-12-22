@@ -235,42 +235,20 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                       ),
                                     ),
                                   ),
-                                  Text(currentItem.productName ?? "Default"),
+                                  Text(
+                                    currentItem.productName ?? "Default",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "     Price ${currentItem.price}" ??
+                                        "Price ${currentItem.price}" ??
                                             "Default",
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
-                                      ),
-                                      Spacer(),
-                                      // Switch(
-                                      //   value: currentItem.isTakeAwayActive ??
-                                      //       true,
-                                      //   onChanged: (value) {
-                                      //     setState(() {
-                                      //       print(currentItem.isTakeAwayActive);
-                                      //       currentItem.isTakeAwayActive =
-                                      //           value;
-                                      //     });
-                                      //   },
-                                      // ),
-                                      Switch(
-                                        value: currentItem.isTakeAwayActive,
-                                        onChanged: (value) {
-                                          print("the value is $value");
-                                          currentItem.isTakeAwayActive = value;
-                                          print(
-                                              "${currentItem.productName}====${currentItem.isTakeAwayActive}");
-                                          setState(() {});
-
-                                          Provider.of<ProviderClass>(context,
-                                                  listen: false)
-                                              .updateTabChoice(isDineIn: value);
-                                        },
-                                        activeColor: Colors.green,
                                       ),
                                     ],
                                   ),
@@ -285,14 +263,15 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                             print(
                                                 "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
 
-                                            selectedIndices.add(index + 1);
+                                            selectedIndices
+                                                .add(currentItem.id!);
                                             print(
                                                 "selected indices are $selectedIndices");
 
                                             List<Map<String, dynamic>>
                                                 itemsToAdd = [
                                               {
-                                                "id": index + 1,
+                                                "id": currentItem.id,
                                                 "isTakeAway":
                                                     currentItem.isTakeAwayActive
                                               },
@@ -303,7 +282,43 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                               listen: false,
                                             ).addtoCart(itemsToAdd: itemsToAdd);
                                           },
-                                          child: Text("ADD"),
+                                          child: Text("Dine In"),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Padding(
+                                        padding: const EdgeInsets.all(1.0),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            currentItem.isTakeAwayActive = true;
+                                            Provider.of<ProviderClass>(context,
+                                                    listen: false)
+                                                .updateTabChoice(
+                                                    isDineIn: false);
+                                            print("Button pressed");
+                                            print(
+                                                "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
+
+                                            selectedIndices
+                                                .add(currentItem.id!);
+                                            print(
+                                                "selected indices are $selectedIndices");
+
+                                            List<Map<String, dynamic>>
+                                                itemsToAdd = [
+                                              {
+                                                "id": currentItem.id,
+                                                "isTakeAway":
+                                                    currentItem.isTakeAwayActive
+                                              },
+                                            ];
+
+                                            Provider.of<ProviderClass>(
+                                              context,
+                                              listen: false,
+                                            ).addtoCart(itemsToAdd: itemsToAdd);
+                                          },
+                                          child: Text("Take Away"),
                                         ),
                                       ),
                                     ],

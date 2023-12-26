@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
-bool? tabchoice;
+// bool? tabchoice;
 
-class TabClass with ChangeNotifier {
-  void toFindTabChoice({required tabchoice}) {
-    if (tabchoice == 0) {
-      tabchoice = true;
-    } else {
-      tabchoice = false;
-    }
-  }
-}
+// class TabClass with ChangeNotifier {
+//   void toFindTabChoice({required tabchoice}) {
+//     if (tabchoice == 0) {
+//       tabchoice = true;
+//     } else {
+//       tabchoice = false;
+//     }
+//   }
+// }

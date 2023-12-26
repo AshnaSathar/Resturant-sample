@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
+import 'package:flutter_application_1/model/model.dart';
 
 import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/Cart_pages/cartDineIn.dart';
@@ -44,8 +45,8 @@ class _CartPageState extends State<CartPage>
             backgroundColor: MaterialStatePropertyAll(ColorsUsed.buttonColor),
           ),
           onPressed: () {
-            print(
-                "${Provider.of<ProviderClass>(context, listen: false).selectedIds}");
+            // print(
+            //     "${Provider.of<ProviderClass>(context, listen: false).selectedIds}");
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -76,28 +77,36 @@ class _CartPageState extends State<CartPage>
 
   Widget buildTabContent({required bool isDineIn}) {
     var provider = Provider.of<ProviderClass>(context);
+    int selectedTable = provider.selectedTableIndex;
 
-    if (isDineIn) {
-      if (provider.selectedItemsForDineIn.isEmpty) {
-        return Center(
-          child: Container(
-            height: MediaQuery.sizeOf(context).height * .1,
-            child: Lottie.asset('assets/Animation - 1702448401276.json'),
-          ),
-        );
-      } else {
+    Map<int, Map<String, List<Food>>> cartMap = provider.cartMap;
+
+    Map<String, List<Food>> selectedTableMap = cartMap[selectedTable]!;
+    print("the table index is inside cart dine in: $selectedTable");
+    print("just for checking: ${provider.cartMap[selectedTable]!['dineIn']!}");
+    (selectedTableMap['dineIn']!);
+    List<Food> selectedItems = isDineIn
+        ? provider
+            .cartMap[selectedTable]!['dineIn']! // Explicit cast to List<Food>
+        : provider.cartMap[selectedTable]!['takeAway']!;
+    selectedItems.forEach((foods) {});
+    print("selected items for confirmation is equal to ${selectedItems}");
+    if (selectedItems.isNotEmpty) {
+      if (isDineIn) {
         return CartDineIn();
-      }
-    } else {
-      if (provider.selectedItemsForTakeAway.isEmpty) {
-        return Center(
-          child: Container(
-            height: MediaQuery.sizeOf(context).height * .1,
-            child: Lottie.asset('assets/Animation - 1702448401276.json'),
-          ),
-        );
       } else {
         return CartTakeAway();
+      }
+    } else {
+      try {
+        return Center(
+          child: Container(
+            child: Lottie.asset('assets/Animation - 1702448401276.json'),
+          ),
+        );
+      } catch (e) {
+        print("Error loading Lottie animation: $e");
+        return Container(); // Return a default widget or an empty container
       }
     }
   }

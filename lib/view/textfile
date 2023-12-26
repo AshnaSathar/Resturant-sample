@@ -348,3 +348,172 @@
 
   //   notifyListeners();
   // }
+
+
+  // 
+
+  // void addToTableOrder({
+  //   required int tableNumber,
+  // }) {
+  //   print("addToTableOrder invoked with tableNumber: $tableNumber");
+
+  //   // Check the current mode based on the isTakeAwayActive property
+  //   bool isTakeAwayActive = tabchoice ?? false;
+
+  //   // Choose the appropriate list based on isTakeAwayActive
+  //   List<Food> selectedItemList =
+  //       isTakeAwayActive ? selectedItemsForTakeAway : selectedItemsForDineIn;
+
+  //   // Create a new map if the table number is not already present
+  //   tableOrders[tableNumber] ??= {'fortakeaway': [], 'fordinein': []};
+
+  //   // Create new lists for each table
+  //   List<Food> selectedItemsForTakeAwayCopy =
+  //       List.from(selectedItemsForTakeAway);
+  //   List<Food> selectedItemsForDineInCopy = List.from(selectedItemsForDineIn);
+
+  //   // Add selected items to the map
+  //   tableOrders[tableNumber]!['fortakeaway'] =
+  //       List.from(selectedItemsForTakeAwayCopy);
+  //   tableOrders[tableNumber]!['fordinein'] =
+  //       List.from(selectedItemsForDineInCopy);
+
+  //   // Print the contents of the map
+  //   print("tableOrders: $tableOrders");
+
+  //   notifyListeners();
+  // }
+  // void addToTableOrder({required int tableNumber, isTakeAwayActive = false}) {
+  //   print("addToTableOrder invoked with tableNumber: $tableNumber");
+
+  //   // bool isTakeAwayActive = tabchoice ?? false;
+  //   print("for you istakeAwayActive =====$isTakeAwayActive");
+  //   List<Food> selectedItemList =
+  //       isTakeAwayActive! ? selectedItemsForTakeAway : selectedItemsForDineIn;
+
+  //   tableOrders[tableNumber] ??= {'fortakeaway': [], 'fordinein': []};
+
+  //   List<Food> selectedItemsForTakeAwayCopy =
+  //       List.from(selectedItemsForTakeAway);
+  //   List<Food> selectedItemsForDineInCopy = List.from(selectedItemsForDineIn);
+
+  //   if (isTakeAwayActive!) {
+  //     tableOrders[tableNumber]!['fortakeaway'] = List.from(selectedItemList);
+  //   } else {
+  //     tableOrders[tableNumber]!['fordinein'] = List.from(selectedItemList);
+  //   }
+
+  //   print("tableOrders: $tableOrders");
+
+  //   notifyListeners();
+  // }
+// 
+
+  // void addtoCart({required List<Map<dynamic, dynamic>> itemsToAdd}) {
+  //   print(itemsToAdd);
+  //   selectedItemsForDineIn_temperory.clear();
+
+  //   List<Food>? allItems = responseData?.food;
+
+  //   for (var itemData in itemsToAdd) {
+  //     int id = itemData['id'] as int;
+  //     bool isTakeAwayActiveValue = itemData['isTakeAway'] as bool;
+
+  //     bool itemExists = isTakeAwayActiveValue
+  //         ? selectedItemsForTakeAway.any((item) => item.id == id)
+  //         : selectedItemsForDineIn.any((item) => item.id == id);
+  //     if (!itemExists) {
+  //       var newItem =
+  //           allItems?.firstWhere((item) => id == item.id, orElse: () => Food());
+  //       newItem?.isEnabled = !sharedDisabledIds.contains(id);
+  //       if (isTakeAwayActiveValue) {
+  //         selectedItemsForTakeAway.add(newItem!);
+  //       } else {
+  //         selectedItemsForDineIn.add(newItem!);
+  //       }
+  //       sharedDisabledIds.add(id);
+  //       selectedItems.add(newItem);
+  //     }
+  //   }
+  //   selectedItemsForDineIn.forEach((food) {
+  //     print(food.productName);
+  //   });
+  //   selectedItemsForDineIn.forEach((food) {
+  //     selectedItemsForDineIn_temperory.add("$food");
+  //     print("for checking  ${food.productName}");
+  //   });
+
+  //   //   mapping(
+  //   //       selectedTableIndex: selectedTableIndex,
+  //   //       selectedItemsForTakeAway: selectedItemsForTakeAway,
+  //   //       selectedItemsForDineIn_temperory: selectedItemsForDineIn_temperory);
+
+  //   //   notifyListeners();
+  // }
+
+  // void mapping(
+  //     {required selectedTableIndex,
+  //     required selectedItemsForDineIn_temperory,
+  //     required selectedItemsForTakeAway}) {
+  //   print(selectedItemsForDineIn_temperory);
+
+  //   cartMap['$selectedTableIndex'] = cart;
+  //   // print("selecteditemsdForTakeAway ${selectedItemsForTakeAway}");
+  //   // print("selectedItemsForDineIn ${selectedItemsForDineIn}");
+  //   // print("hey ${cartMap}");
+
+  //   // cartMap.forEach((key, value) {
+  //   //   print("Key: $key");
+  //   //   print("  dineIn: ${value['dineIn']}");
+  //   //   print("  takeAway: ${value['takeAway']}");
+  //   // });
+  //   selectedItemsForDineIn_temperory.clear();
+  //   // print(selectedItemsForDineIn_temperory);
+  //   notifyListeners();
+  // }
+// 
+
+  // void addtoCart({required List<Map<String, dynamic>> itemsToAdd}) {
+  //   cartMap[selectedTableIndex] ??= {'dineIn': [], 'takeAway': []};
+
+  //   print("table index is $selectedTableIndex");
+  //   print("item to add is: $itemsToAdd");
+  //   List<Food>? allItems = responseData?.food;
+
+  //   for (var itemData in itemsToAdd) {
+  //     int id = itemData['id'] as int;
+  //     bool isTakeAwayActiveValue = itemData['isTakeAway'] as bool;
+
+  //     bool itemExists = isTakeAwayActiveValue
+  //         ? cartMap[selectedTableIndex]!['dineIn']!.any((item) => item.id == id)
+  //         : cartMap[selectedTableIndex]!['takeAway']!
+  //             .any((item) => item.id == id);
+
+  //     if (!itemExists) {
+  //       var newItem =
+  //           allItems?.firstWhere((item) => item.id == id, orElse: () => Food());
+
+  //       if (newItem != null) {
+  //         newItem.isEnabled = !sharedDisabledIds.contains(id);
+
+  //         if (isTakeAwayActiveValue) {
+  //           cartMap[selectedTableIndex]!['takeAway']!.add(newItem);
+  //         } else {
+  //           cartMap[selectedTableIndex]!['dineIn']!.add(newItem);
+  //         }
+  //       }
+  //     }
+  //   }
+
+  //   cartMap.forEach((tableIndex, tableData) {
+  //     print("Table Index: $tableIndex");
+  //     tableData.forEach((category, items) {
+  //       print("  Category: $category");
+  //       items.forEach((food) {
+  //         print("    Food: ${food.productName}, ID: ${food.id}");
+  //       });
+  //     });
+  //   });
+
+  //   notifyListeners();
+  // }

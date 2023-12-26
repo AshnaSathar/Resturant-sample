@@ -52,20 +52,10 @@ class _HomePageState extends State<HomePage>
             indicatorColor: Colors.white,
             controller: tabController,
             tabs: [
-              GestureDetector(
-                // onTap: () {
-                //   Provider.of<ProviderClass>(context).tabchoice = true;
-                // },
-                child: GestureDetector(
-                  // onTap: () {
-                  //   Provider.of<ProviderClass>(context).tabchoice = false;
-                  // },
-                  child: Tab(
-                    child: Text(
-                      "Dine- in",
-                      style: TextStyle(color: ColorsUsed.text_Color_White),
-                    ),
-                  ),
+              Tab(
+                child: Text(
+                  "Dine- in",
+                  style: TextStyle(color: ColorsUsed.text_Color_White),
                 ),
               ),
               Tab(
@@ -104,23 +94,6 @@ class _HomePageState extends State<HomePage>
                 children: [
                   Text("Welcome back Dine In!"),
                   Text("  "),
-                  // InkWell(
-                  // onTap: () {
-                  //   Provider.of<ProviderClass>(context, listen: false)
-                  //       .updateTabChoice(true);
-
-                  //   Navigator.pushReplacement(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => CategoriesPage(),
-                  //     ),
-                  //   );
-                  // },
-                  // child: Text(
-                  //   "START",
-                  //   style: TextStyle(color: Colors.blue[800]),
-                  // ),
-                  // )
                 ],
               ),
             );

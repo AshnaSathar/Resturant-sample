@@ -38,6 +38,7 @@ class Food {
   int? count;
   bool? isEnabled;
   bool isTakeAwayActive;
+  int? selectedTableIndex;
 
   Food(
       {this.id,
@@ -47,6 +48,7 @@ class Food {
       this.categoryName,
       this.isTakeAwayActive = false,
       this.count = 0,
+      this.selectedTableIndex,
       this.isEnabled = true});
 
   factory Food.fromJson(Map<String, dynamic> json) => Food(

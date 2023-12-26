@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/Table.dart';
+import 'package:flutter_application_1/view/categories.dart';
 
 class CustomTableWidget extends StatelessWidget {
-  final int index;
+  final int tableindex;
 
-  CustomTableWidget({required this.index});
+  CustomTableWidget({required this.tableindex});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +18,12 @@ class CustomTableWidget extends StatelessWidget {
       child: Container(
         height: containerHeight,
         width: containerWidth,
-        color: isSelectedTable[index] ? ColorsUsed.online : ColorsUsed.offline,
+        color: isSelectedTable[tableindex]
+            ? ColorsUsed.online
+            : ColorsUsed.offline,
         child: Center(
             child: Text(
-          "T${index + 1} ",
+          "T${tableindex + 1} ",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
         )),
       ),

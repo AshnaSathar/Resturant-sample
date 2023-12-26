@@ -86,9 +86,9 @@ class _SortPageItemState extends State<SortPageItem> {
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
                         onPressed: () {
-                          print("Button pressed");
-                          print(
-                              "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
+                          // print("Button pressed");
+                          // print(
+                          //     "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
 
                           List<Map<String, dynamic>> itemsToAdd = [
                             {
@@ -113,9 +113,9 @@ class _SortPageItemState extends State<SortPageItem> {
                           currentItem.isTakeAwayActive = true;
                           Provider.of<ProviderClass>(context, listen: false)
                               .updateTabChoice(isDineIn: false);
-                          print("Button pressed");
-                          print(
-                              "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
+                          // print("Button pressed");
+                          // print(
+                          //     "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
 
                           List<Map<String, dynamic>> itemsToAdd = [
                             {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
 import 'package:flutter_application_1/model/model.dart';
 import 'package:flutter_application_1/utils/color_Constants.dart';
-import 'package:flutter_application_1/view/Table.dart';
+
 import 'package:provider/provider.dart';
 
 class InvoiceDineIn extends StatelessWidget {
@@ -13,9 +13,12 @@ class InvoiceDineIn extends StatelessWidget {
   @override
   List<String> rowHeadings = ["SI NO", "NAME", "PRICE", "COUNT", "SUM"];
   Widget build(BuildContext context) {
-    print("insdie");
-    List<Food> selectedItemsForDineIn =
-        Provider.of<ProviderClass>(context).selectedItemsForDineIn;
+    var provider = Provider.of<ProviderClass>(context);
+    int selectedTable = provider.selectedTableIndex;
+    Map<int, Map<String, List<Food>>> cartMap = provider.cartMap;
+    print("------------------dine in-------------");
+    var selectedItemsD = provider.cartMap[selectedTable]!['dineIn']!;
+    // print("checking inside the invoice: $selectedItemsD");
     return Column(
       children: [
         ListTile(
@@ -42,9 +45,9 @@ class InvoiceDineIn extends StatelessWidget {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: selectedItemsForDineIn.length,
+            itemCount: selectedItemsD.length,
             itemBuilder: (context, index) {
-              var selectedItem = selectedItemsForDineIn[index];
+              var selectedItem = selectedItemsD[index];
               List<dynamic> rowData = [
                 selectedItem.id,
                 selectedItem.productName,

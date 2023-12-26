@@ -12,10 +12,22 @@ class InvoiceTakeAway extends StatelessWidget {
 
   @override
   List<String> rowHeadings = ["SI NO", "NAME", "PRICE", "COUNT", "SUM"];
+
   Widget build(BuildContext context) {
-    print("insdie");
-    List<Food> selectedItemsForTakeAway =
-        Provider.of<ProviderClass>(context).selectedItemsForTakeAway;
+    var provider = Provider.of<ProviderClass>(context);
+    int selectedTable = provider.selectedTableIndex;
+    print("-----------------take away--------------");
+
+    print("selected table comes inside invoice take away: $selectedTable");
+    Map<int, Map<String, List<Food>>> cartMap = provider.cartMap;
+
+    var selectedItemsT = provider.cartMap[selectedTable]!['takeAway']!;
+    print("insdie the take away");
+    selectedItemsT.forEach(
+      (element) {
+        print(element.productName);
+      },
+    );
     return Column(
       children: [
         ListTile(
@@ -42,9 +54,9 @@ class InvoiceTakeAway extends StatelessWidget {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: selectedItemsForTakeAway.length,
+            itemCount: selectedItemsT.length,
             itemBuilder: (context, index) {
-              var selectedItem = selectedItemsForTakeAway[index];
+              var selectedItem = selectedItemsT[index];
               List<dynamic> rowData = [
                 selectedItem.id,
                 selectedItem.productName,

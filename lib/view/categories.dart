@@ -259,14 +259,17 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                         padding: const EdgeInsets.all(8.0),
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            print("Button pressed");
-                                            print(
-                                                "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
+                                            // print("Button pressed");
+                                            // print(
+                                            //     "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
+                                            // Provider.of<ProviderClass>(context)
+                                            //         .takeActiveindexTopass =
+                                            //     currentItem.isTakeAwayActive;
 
                                             selectedIndices
                                                 .add(currentItem.id!);
-                                            print(
-                                                "selected indices are $selectedIndices");
+                                            // print(
+                                            //     "selected indices are $selectedIndices");
 
                                             List<Map<String, dynamic>>
                                                 itemsToAdd = [
@@ -295,14 +298,14 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                                     listen: false)
                                                 .updateTabChoice(
                                                     isDineIn: false);
-                                            print("Button pressed");
-                                            print(
-                                                "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
+                                            // print("Button pressed");
+                                            // print(
+                                            //     "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
 
                                             selectedIndices
                                                 .add(currentItem.id!);
-                                            print(
-                                                "selected indices are $selectedIndices");
+                                            // print(
+                                            //     "selected indices are $selectedIndices");
 
                                             List<Map<String, dynamic>>
                                                 itemsToAdd = [

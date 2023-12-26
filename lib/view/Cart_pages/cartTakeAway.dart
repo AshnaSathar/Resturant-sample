@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
+
 import 'package:flutter_application_1/model/model.dart';
+import 'package:flutter_application_1/view/Home.dart';
+import 'package:flutter_application_1/view/Invoice_Pages/invoice.dart';
 import 'package:flutter_application_1/view/categories.dart';
+import 'package:flutter_application_1/widgets/CustomeButton.dart';
 import 'package:provider/provider.dart';
 
-var currentCount = 0;
+var currentCount = 1;
 var price = 0;
 
 class CartTakeAway extends StatefulWidget {
@@ -18,8 +22,34 @@ class _CartTakeAwayState extends State<CartTakeAway> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, provider, child) {
-      List<Food> selectedItemsT =
-          Provider.of<ProviderClass>(context).selectedItemsForTakeAway;
+      var provider = Provider.of<ProviderClass>(context);
+      int selectedTable = provider.selectedTableIndex;
+
+      Map<int, Map<String, List<Food>>> cartMap = provider.cartMap;
+
+      // Map<String, List<Food>> selectedTableMap = cartMap[selectedTable]!;
+      print("the table index is inside cart dine in: ${selectedTable}");
+      provider.cartMap[selectedTable]!['takeAway']!.toList().forEach(
+        (element) {
+          print("just for checking: ${element.productName}");
+        },
+      );
+
+      var selectedItemsT = provider.cartMap[selectedTable]!['takeAway']!;
+
+      Provider.of<ProviderClass>(context)
+          .cartMap[selectedTable]!['takeAway']!
+          .forEach((element) {
+        print("for Checking");
+        print(element.productName);
+      });
+      selectedItemsT.forEach((foods) {
+        if (foods.productName != null) {
+          print(foods.productName!);
+        } else {
+          print("ProductName is null for item ID: ${foods.id}");
+        }
+      });
 
       return Column(
         children: [
@@ -67,23 +97,24 @@ class _CartTakeAwayState extends State<CartTakeAway> {
                           children: [
                             InkWell(
                               onTap: () {
+                                print("+ icon pressed");
                                 print("index is $index");
                                 try {
                                   double price =
                                       double.parse(currentItem.price!);
-                                  currentCount = Provider.of<ProviderClass>(
-                                          context,
-                                          listen: false)
-                                      .selectedItemsForTakeAway[index]
-                                      .count!
-                                      .toInt();
+                                  int currentCount = currentItem.count!;
+
+                                  bool isTakeAwayActive = true;
+
                                   Provider.of<ProviderClass>(context,
                                           listen: false)
                                       .increment(
-                                          isTakeAwayActive: true,
-                                          id: currentItem.id!,
-                                          currentCount: currentCount,
-                                          priceofItem: currentItem.price);
+                                    isTakeAwayActive: isTakeAwayActive,
+                                    id: currentItem.id!,
+                                    currentCount: currentCount,
+                                    priceofItem: currentItem.price,
+                                  );
+
                                   setState(() {});
                                 } catch (e) {
                                   print("Error parsing price: $e");
@@ -97,20 +128,20 @@ class _CartTakeAwayState extends State<CartTakeAway> {
                                 try {
                                   double price =
                                       double.parse(currentItem.price!);
-                                  currentCount = Provider.of<ProviderClass>(
-                                          context,
-                                          listen: false)
-                                      .selectedItemsForTakeAway[index]
-                                      .count!;
+                                  int currentCount = currentItem.count!;
+
+                                  bool isTakeAwayActive = true;
 
                                   Provider.of<ProviderClass>(context,
                                           listen: false)
                                       .removeFromcart(
-                                          id: currentItem.id!,
-                                          isTakeAwayActive: true,
-                                          currentCount: currentCount,
-                                          priceofItem:
-                                              selectedItemsT[index].price);
+                                    isTakeAwayActive: isTakeAwayActive,
+                                    id: currentItem.id!,
+                                    currentCount: currentCount,
+                                    priceofItem: price,
+                                  );
+
+                                  setState(() {});
                                 } catch (e) {
                                   print("Error parsing price: $e");
                                 }
@@ -124,25 +155,22 @@ class _CartTakeAwayState extends State<CartTakeAway> {
                                 try {
                                   double price =
                                       double.parse(currentItem.price!);
-                                  currentCount = Provider.of<ProviderClass>(
-                                          context,
-                                          listen: false)
-                                      .selectedItemsForTakeAway[index]
-                                      .count!
-                                      .toInt();
-                                  if (currentCount >= 1) {
-                                    Provider.of<ProviderClass>(context,
-                                            listen: false)
-                                        .decrement(
-                                            isTakeAwayActive: true,
-                                            id: currentItem.id!,
-                                            currentCount: currentCount,
-                                            priceofItem: currentItem.price);
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text("Invalid option")),
-                                    );
-                                  }
+                                  int currentCount = currentItem.count!;
+
+                                  bool isTakeAwayActive = true;
+                                  (currentCount > 0)
+                                      ? Provider.of<ProviderClass>(context,
+                                              listen: false)
+                                          .decrement(
+                                          isTakeAwayActive: isTakeAwayActive,
+                                          id: currentItem.id!,
+                                          currentCount: currentCount,
+                                          priceofItem: currentItem.price,
+                                        )
+                                      : ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Invalid Input! Count should be greater than zero")));
 
                                   setState(() {});
                                 } catch (e) {
@@ -173,6 +201,16 @@ class _CartTakeAwayState extends State<CartTakeAway> {
                 ),
               ),
               Spacer(),
+              ElevatedButton(
+                  onPressed: () {
+                    Provider.of<ProviderClass>(context).isTakeAwayActive = true;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomePage(),
+                        ));
+                  },
+                  child: Text("Kitchen")),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
@@ -187,7 +225,6 @@ class _CartTakeAwayState extends State<CartTakeAway> {
               )
             ],
           ),
-          SizedBox(height: 16.0),
         ],
       );
     });

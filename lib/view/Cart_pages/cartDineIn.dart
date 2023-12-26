@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
-import 'package:flutter_application_1/model/model.dart';
+
+import 'package:flutter_application_1/view/Home.dart';
 import 'package:flutter_application_1/view/categories.dart';
+import 'package:flutter_application_1/widgets/CustomeButton.dart';
 import 'package:provider/provider.dart';
 
 var currentCount = 1;
@@ -18,8 +20,9 @@ class _CartDineInState extends State<CartDineIn> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, provider, child) {
-      List<Food> selectedItemsD =
-          Provider.of<ProviderClass>(context).selectedItemsForDineIn;
+      var provider = Provider.of<ProviderClass>(context);
+      int selectedTable = provider.selectedTableIndex;
+      var selectedItemsD = provider.cartMap[selectedTable]!['dineIn']!;
 
       return Column(
         children: [
@@ -28,6 +31,7 @@ class _CartDineInState extends State<CartDineIn> {
               itemCount: selectedItemsD.length,
               itemBuilder: (context, index) {
                 var currentItem = selectedItemsD[index];
+
                 return Container(
                   margin: EdgeInsets.all(8.0),
                   padding: EdgeInsets.all(16.0),
@@ -35,129 +39,127 @@ class _CartDineInState extends State<CartDineIn> {
                     border: Border.all(color: Colors.blue),
                     borderRadius: BorderRadius.circular(8.0),
                   ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            currentItem.productName ?? "Default",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Row(
+                  child: Consumer(
+                    builder: (context, value, child) => Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(currentItem.price ?? "Default"),
-                            Text(" X "),
-                            Text("${currentItem.count}"),
-                            Spacer(),
                             Text(
-                              "Price: ${(double.parse(currentItem.price!) * (selectedItemsD[index].count ?? 0).toDouble())} ",
+                              currentItem.productName ?? "Default",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
                             ),
                           ],
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                print("+ icon pressed");
-                                print("index is $index");
-                                try {
-                                  double price =
-                                      double.parse(currentItem.price!);
-                                  currentCount = Provider.of<ProviderClass>(
-                                          context,
-                                          listen: false)
-                                      .selectedItemsForDineIn[index]
-                                      .count!
-                                      .toInt();
-                                  Provider.of<ProviderClass>(context,
-                                          listen: false)
-                                      .increment(
-                                    isTakeAwayActive: false,
-                                    id: currentItem.id!,
-                                    currentCount: currentCount,
-                                    priceofItem: currentItem.price,
-                                  );
-                                  setState(() {});
-                                } catch (e) {
-                                  print("Error parsing price: $e");
-                                }
-                              },
-                              child: Icon(Icons.add),
-                            ),
-                            Spacer(),
-                            InkWell(
-                              onTap: () {
-                                try {
-                                  double price =
-                                      double.parse(currentItem.price!);
-                                  currentCount = Provider.of<ProviderClass>(
-                                          context,
-                                          listen: false)
-                                      .selectedItemsForDineIn[index]
-                                      .count!
-                                      .toInt();
-                                  Provider.of<ProviderClass>(context,
-                                          listen: false)
-                                      .removeFromcart(
-                                          id: currentItem.id!,
-                                          isTakeAwayActive: false,
-                                          currentCount: currentCount,
-                                          priceofItem:
-                                              selectedItemsD[index].price);
-                                  setState(() {});
-                                } catch (e) {
-                                  print("Error parsing price: $e");
-                                }
-                              },
-                              child: Icon(Icons.delete),
-                            ),
-                            Spacer(),
-                            InkWell(
-                              onTap: () {
-                                print("index is $index");
-                                try {
-                                  double price =
-                                      double.parse(currentItem.price!);
-                                  currentCount = Provider.of<ProviderClass>(
-                                          context,
-                                          listen: false)
-                                      .selectedItemsForDineIn[index]
-                                      .count!
-                                      .toInt();
-                                  if (currentCount >= 1) {
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            children: [
+                              Text(currentItem.price ?? "Default"),
+                              Text(" X "),
+                              Text("${currentItem.count}"),
+                              Spacer(),
+                              Text(
+                                "Price: ${(double.parse(currentItem.price!) * (selectedItemsD[index].count ?? 0).toDouble())} ",
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  print(currentItem.price);
+                                  print("+ icon pressed");
+                                  print("index is $index");
+                                  try {
+                                    double price =
+                                        double.parse(currentItem.price!);
+                                    int currentCount = currentItem.count!;
+
+                                    bool isTakeAwayActive = false;
+
                                     Provider.of<ProviderClass>(context,
                                             listen: false)
-                                        .decrement(
-                                            isTakeAwayActive: false,
+                                        .increment(
+                                      isTakeAwayActive: isTakeAwayActive,
+                                      id: currentItem.id!,
+                                      currentCount: currentCount,
+                                      priceofItem: currentItem.price,
+                                    );
+
+                                    setState(() {});
+                                  } catch (e) {
+                                    print("Error parsing price: $e");
+                                  }
+                                },
+                                child: Icon(Icons.add),
+                              ),
+                              Spacer(),
+                              InkWell(
+                                onTap: () {
+                                  try {
+                                    double price =
+                                        double.parse(currentItem.price!);
+                                    int currentCount = currentItem.count!;
+
+                                    bool isTakeAwayActive = true;
+
+                                    Provider.of<ProviderClass>(context,
+                                            listen: false)
+                                        .removeFromcart(
+                                      isTakeAwayActive: isTakeAwayActive,
+                                      id: currentItem.id!,
+                                      currentCount: currentCount,
+                                      priceofItem: price,
+                                    );
+
+                                    setState(() {});
+                                  } catch (e) {
+                                    print("Error parsing price: $e");
+                                  }
+                                },
+                                child: Icon(Icons.delete),
+                              ),
+                              Spacer(),
+                              InkWell(
+                                onTap: () {
+                                  print("index is $index");
+                                  try {
+                                    double price =
+                                        double.parse(currentItem.price!);
+                                    int currentCount = currentItem.count!;
+
+                                    bool isTakeAwayActive = false;
+                                    (currentCount > 0)
+                                        ? Provider.of<ProviderClass>(context,
+                                                listen: false)
+                                            .decrement(
+                                            isTakeAwayActive: isTakeAwayActive,
                                             id: currentItem.id!,
                                             currentCount: currentCount,
-                                            priceofItem: currentItem.price);
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text("Invalid option")),
-                                    );
-                                  }
+                                            priceofItem: currentItem.price,
+                                          )
+                                        : ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    "Invalid Input! Count should be greater than zero")));
 
-                                  setState(() {});
-                                } catch (e) {
-                                  print("Error parsing price: $e");
-                                }
-                              },
-                              child: Icon(Icons.remove),
-                            ),
-                          ],
+                                    setState(() {});
+                                  } catch (e) {
+                                    print("Error parsing price: $e");
+                                  }
+                                },
+                                child: Icon(Icons.remove),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
@@ -176,6 +178,15 @@ class _CartDineInState extends State<CartDineIn> {
                 ),
               ),
               Spacer(),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomePage(),
+                        ));
+                  },
+                  child: Text("Kitchen")),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
@@ -195,3 +206,54 @@ class _CartDineInState extends State<CartDineIn> {
     });
   }
 }
+         // try {
+                                //   double price =
+                                //       double.parse(currentItem.price!);
+                                //   currentCount = Provider.of<ProviderClass>(
+                                //           context,
+                                //           listen: false)
+                                //       .selectedItemsForDineIn[index]
+                                //       .count!
+                                //       .toInt();
+                                //   if (currentCount >= 1) {
+                                //     Provider.of<ProviderClass>(context,
+                                //             listen: false)
+                                //         .decrement(
+                                //             isTakeAwayActive: false,
+                                //             id: currentItem.id!,
+                                //             currentCount: currentCount,
+                                //             priceofItem: currentItem.price);
+                                //   } else {
+                                //     ScaffoldMessenger.of(context).showSnackBar(
+                                //       SnackBar(content: Text("Invalid option")),
+                                //     );
+                                //   }
+
+                                //   setState(() {});
+                                // } catch (e) {
+                                //   print("Error parsing price: $e");
+                                // }
+
+
+
+                                // try {
+                                //   double price =
+                                //       double.parse(currentItem.price!);
+                                //   currentCount = Provider.of<ProviderClass>(
+                                //           context,
+                                //           listen: false)
+                                //       .selectedItemsForDineIn[index]
+                                //       .count!
+                                //       .toInt();
+                                //   Provider.of<ProviderClass>(context,
+                                //           listen: false)
+                                //       .increment(
+                                //     isTakeAwayActive: false,
+                                //     id: currentItem.id!,
+                                //     currentCount: currentCount,
+                                //     priceofItem: currentItem.price,
+                                //   );
+                                //   setState(() {});
+                                // } catch (e) {
+                                //   print("Error parsing price: $e");
+                                // }

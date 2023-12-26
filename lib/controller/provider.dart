@@ -1,30 +1,34 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/model.dart';
-import 'package:flutter_application_1/view/Cart_pages/cart.dart';
-import 'package:flutter_application_1/view/Table.dart';
+
+import 'package:flutter_application_1/view/categories.dart';
 import 'package:http/http.dart' as http;
 
-int tableIndex = 0;
 List<int> disabledIds = [];
 
 class ProviderClass with ChangeNotifier {
+  // var takeActiveindexTopass;
+  int tableIndex = 0;
   ModelClass? responseData;
+  int selectedTableIndex = 0;
   List<String> selectedIds = [];
   List<Food> selectedItems = [];
-  List<String> selectedIdForDineIn = [];
+  List<String> selectedItemsForDineIn_temperory = [];
   List<Food> selectedItemsForDineIn = [];
   List<String> selectedIdForTakeAway = [];
   List<Food> selectedItemsForTakeAway = [];
+  bool? tabchoice;
   double totalSum = 0;
   List<int> idtoDisable = [];
   List<int> sharedDisabledIds = [];
-  bool? tabchoice;
+  List activeTableList = [];
   bool? isTakeAwayActive;
   var totalPriceForDineIn;
   var totalPriceForTakeAway;
-  set isSendKitchen(bool isSendKitchen) {}
-
+  var items = [];
+  Map<int, Map<String, List<Food>>> cartMap = {};
+  var sample;
   Future<void> fetchData() async {
     try {
       final url =
@@ -47,50 +51,74 @@ class ProviderClass with ChangeNotifier {
     }
   }
 
-  void addtoCart({required List<Map<dynamic, dynamic>> itemsToAdd}) {
-    print(itemsToAdd);
+  void addtoCart({required List<Map<String, dynamic>> itemsToAdd}) {
+    cartMap[selectedTableIndex] ??= {'dineIn': [], 'takeAway': []};
+
     List<Food>? allItems = responseData?.food;
+
+    Set<int> dineInItemIds = Set<int>.from(
+        cartMap[selectedTableIndex]!['dineIn']!.map((item) => item.id));
+    Set<int> takeAwayItemIds = Set<int>.from(
+        cartMap[selectedTableIndex]!['takeAway']!.map((item) => item.id));
 
     for (var itemData in itemsToAdd) {
       int id = itemData['id'] as int;
       bool isTakeAwayActiveValue = itemData['isTakeAway'] as bool;
-      print(isTakeAwayActiveValue);
 
       bool itemExists = isTakeAwayActiveValue
-          ? selectedItemsForTakeAway.any((item) => item.id == id)
-          : selectedItemsForDineIn.any((item) => item.id == id);
+          ? takeAwayItemIds.contains(id)
+          : dineInItemIds.contains(id);
 
       if (!itemExists) {
         var newItem =
-            allItems?.firstWhere((item) => id == item.id, orElse: () => Food());
-        newItem?.isEnabled = !sharedDisabledIds.contains(id);
+            allItems?.firstWhere((item) => item.id == id, orElse: () => Food());
 
-        if (isTakeAwayActiveValue) {
-          print("inside second if");
-          print("selected item for take away: ${selectedItemsForTakeAway}");
-          selectedItemsForTakeAway.add(newItem!);
-        } else {
-          print("selected item for dine-in are: ${selectedItemsForDineIn}");
-          selectedItemsForDineIn.add(newItem!);
-        }
+        if (newItem != null) {
+          newItem.isEnabled = !sharedDisabledIds.contains(id);
 
-        // Perform common operations if needed
-        sharedDisabledIds.add(id);
-        selectedItems.add(newItem);
-
-        // ...
-
-        for (var i = 0; i < selectedItemsForTakeAway.length; i++) {
-          print("items are ${selectedItemsForTakeAway[i].productName}");
+          if (isTakeAwayActiveValue) {
+            cartMap[selectedTableIndex]!['takeAway']!.add(newItem);
+            takeAwayItemIds.add(id);
+          } else {
+            cartMap[selectedTableIndex]!['dineIn']!.add(newItem);
+            dineInItemIds.add(id);
+          }
         }
       }
     }
 
+    // cartMap.forEach((tableIndex, tableData) {
+    //   print("Table Index: $tableIndex");
+    //   tableData.forEach((category, items) {
+    //     print("  Category: $category");
+    //     items.forEach((food) {
+    //       print("    Food: ${food.productName}, ID: ${food.id}");
+    //     });
+    //   });
+    // });
+
     notifyListeners();
+  }
+
+  void selectedTableIndexfunc({required tableIndex}) {
+    selectedTableIndex = tableIndex;
+    // print(selectedTableIndex);
+    if (!activeTableList.contains(selectedTableIndex)) {
+      activeTableList.add(selectedTableIndex);
+    }
+    // print(activeTableList);
+    notifyListeners();
+  }
+
+  void removeTableFromActiveTable({required index}) {
+    if (activeTableList.contains(index)) {
+      activeTableList.remove(index);
+    }
   }
 
   void updateTabChoice({required bool isDineIn}) {
     tabchoice = isTakeAwayActive;
+
     notifyListeners();
   }
 
@@ -100,26 +128,24 @@ class ProviderClass with ChangeNotifier {
     required dynamic priceofItem,
     required bool isTakeAwayActive,
   }) async {
-    print("inside increment");
-    print("isTakeAway=$isTakeAwayActive");
+    cartMap[selectedTableIndex] ??= {'dineIn': [], 'takeAway': []};
+    ("inside increment");
+    // print("isTakeAway=$isTakeAwayActive");
 
-    // Choose the appropriate list based on isTakeAwayActive
-    List<Food> selectedItemList =
-        isTakeAwayActive ? selectedItemsForTakeAway : selectedItemsForDineIn;
+    List<Food> selectedItemList = isTakeAwayActive
+        ? cartMap[selectedTableIndex]!['takeAway']!
+        : cartMap[selectedTableIndex]!['dineIn']!;
 
     var selectedItem = selectedItemList.firstWhere((item) => item.id == id);
 
-    // Create a new instance to avoid shared references
     var updatedItem = Food(
       id: selectedItem.id,
       productName: selectedItem.productName,
       price: selectedItem.price,
       count: currentCount + 1,
       isTakeAwayActive: selectedItem.isTakeAwayActive,
-      // Add other properties from your Food class
     );
 
-    // Replace the old item with the updated one
     int index = selectedItemList.indexOf(selectedItem);
     selectedItemList[index] = updatedItem;
 
@@ -127,7 +153,7 @@ class ProviderClass with ChangeNotifier {
     double incrementSum = 1 * priceInt;
 
     totalSum += incrementSum;
-    print("Total Sum: $totalSum");
+    // print("Total Sum: $totalSum");
 
     notifyListeners();
   }
@@ -135,26 +161,35 @@ class ProviderClass with ChangeNotifier {
   Future<void> decrement({
     required int id,
     required int currentCount,
-    required dynamic priceofItem, // Assuming priceofItem can be of any type
+    required dynamic priceofItem,
     required bool isTakeAwayActive,
   }) async {
-    print("inside increment");
-    print("isTakeAway=$isTakeAwayActive");
+    cartMap[selectedTableIndex] ??= {'dineIn': [], 'takeAway': []};
+    // print("inside increment");
+    // print("isTakeAway=$isTakeAwayActive");
 
-    // Choose the appropriate list based on isTakeAwayActive
-    var selectedItemList =
-        isTakeAwayActive ? selectedItemsForTakeAway : selectedItemsForDineIn;
+    List<Food> selectedItemList = isTakeAwayActive
+        ? cartMap[selectedTableIndex]!['takeAway']!
+        : cartMap[selectedTableIndex]!['dineIn']!;
 
     var selectedItem = selectedItemList.firstWhere((item) => item.id == id);
 
-    selectedItem.count = currentCount - 1;
+    var updatedItem = Food(
+      id: selectedItem.id,
+      productName: selectedItem.productName,
+      price: selectedItem.price,
+      count: currentCount - 1,
+      isTakeAwayActive: selectedItem.isTakeAwayActive,
+    );
 
-    double priceInt = double.parse(
-        priceofItem.toString()); // Assuming priceofItem is a string
-    double decrementSum = 1 * priceInt;
+    int index = selectedItemList.indexOf(selectedItem);
+    selectedItemList[index] = updatedItem;
 
-    totalSum -= decrementSum;
-    print("Total Sum: $totalSum");
+    double priceInt = double.parse(priceofItem.toString());
+    double incrementSum = 1 * priceInt;
+
+    totalSum -= incrementSum;
+    // print("Total Sum: $totalSum");
 
     notifyListeners();
   }
@@ -162,52 +197,39 @@ class ProviderClass with ChangeNotifier {
   void removeFromcart({
     required id,
     required isTakeAwayActive,
-    required currentCount,
-    required priceofItem,
+    required int currentCount,
+    required double priceofItem,
   }) {
-    if (isTakeAwayActive) {
-      selectedItemsForTakeAway.removeWhere((item) => item.id == id);
-    } else {
-      selectedItemsForDineIn.removeWhere((item) => item.id == id);
-    }
+    List<Food> selectedItemList = isTakeAwayActive
+        ? cartMap[selectedTableIndex]!['takeAway']!
+        : cartMap[selectedTableIndex]!['dineIn']!;
+    var selectedItem = selectedItemList.firstWhere((item) => item.id == id);
 
-    // Update selectedItems list without the removed item
-    selectedItems.removeWhere((item) => item.id == id);
     var amount;
-    var amount2;
-    // double totalSum = 0;
-    print("total sum before=====$totalSum");
-    for (var item in selectedItemsForDineIn) {
-      amount = double.parse(item.price!) * item.count!;
-      print("amount is $amount");
-    }
-    print("totalSum is$totalSum");
-    for (var item in selectedItemsForTakeAway) {
-      amount2 = double.parse(item.price!) * item.count!;
-      print("amount 2=$amount2");
-    }
-    var totalPricetoDecrease = amount + amount2;
-    totalSum = totalSum - totalPricetoDecrease;
+    amount = priceofItem * currentCount;
+    selectedItem.count = 0;
+    // print("total sum before=====$totalSum");
+    totalSum = totalSum - amount;
     notifyListeners();
   }
 
-  int findIndexById(int id, List<Food> items) {
-    for (int i = 0; i < items.length; i++) {
-      if (items[i].id == id) {
-        return i;
-      }
-    }
-    return -1; // Return -1 if the item is not found
-  }
+  // int findIndexById(int id, List<Food> items) {
+  //   for (int i = 0; i < items.length; i++) {
+  //     if (items[i].id == id) {
+  //       return i;
+  //     }
+  //   }
+  //   return -1;
+  // }
 
   void tableIndexOn({required index}) {
     isSelectedTable[index] = true;
     tableIndex = index;
   }
 
-  void tableIndexOff({required index}) {
-    isSelectedTable[index] = false;
-  }
+  // void tableIndexOff({required index}) {
+  //   isSelectedTable[index] = false;
+  // }
 
   void disableButton({required var id}) {
     idtoDisable.add(id);

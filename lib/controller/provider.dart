@@ -16,19 +16,12 @@ class ProviderClass with ChangeNotifier {
   int selectedTableIndex = 0;
   List<String> selectedIds = [];
   List<Food> selectedItems = [];
-  // List<String> selectedItemsForDineIn_temperory = [];
-  // List<Food> selectedItemsForDineIn = [];
   List<String> selectedIdForTakeAway = [];
-  // List<Food> selectedItemsForTakeAway = [];
   bool? tabchoice;
-  // double totalSum = 0;
   List<int> idtoDisable = [];
   List<int> sharedDisabledIds = [];
   List activeTableList = [];
   bool? isTakeAwayActive;
-  // var totalPriceForDineIn;
-  // var totalPriceForTakeAway;
-  // var items = [];
   Map<int, Map<String, List<Food>>> cartMap = {};
   var sample;
   Future<void> fetchData() async {
@@ -43,7 +36,6 @@ class ProviderClass with ChangeNotifier {
           responseData?.food?.length ?? 0,
           "",
         );
-
         notifyListeners();
       } else {
         print("Failed to fetch data. Status code: ${response.statusCode}");
@@ -92,29 +84,10 @@ class ProviderClass with ChangeNotifier {
     notifyListeners();
   }
 
-  // void calculateTotalSumForEachTable() {
-  //   cartMap.forEach((tableIndex, tableData) {
-  //     double totalSumForTable = 0.0;
-
-  //     tableData.forEach((category, items) {
-  //       items.forEach((food) {
-  //         var price = food.price;
-  //         var priceDouble = double.parse(price ?? '0.0');
-  //         totalSumForTable -= priceDouble * food.count!;
-  //       });
-  //     });
-  //     totalSum = totalSumForTable;
-  //     print('Table $tableIndex Total Sum: $totalSumForTable');
-  //     print("totalSum is $totalSum");
-  //   });
-  // }
-
   void calculateTotalSumForEachTable() {
     totalSumForTable.clear();
-
     cartMap.forEach((tableIndex, tableData) {
       double totalSumForCurrentTable = 0.0;
-
       tableData.forEach((category, items) {
         items.forEach((food) {
           var price = food.price;
@@ -122,22 +95,16 @@ class ProviderClass with ChangeNotifier {
           totalSumForCurrentTable += priceDouble * (food.count ?? 0);
         });
       });
-
-      print('Table $tableIndex Total Sum: $totalSumForCurrentTable');
       totalSumForTable[tableIndex] = totalSumForCurrentTable;
     });
-
-    print('Total Sum for all tables: $totalSumForTable');
     notifyListeners();
   }
 
   void selectedTableIndexfunc({required tableIndex}) {
     selectedTableIndex = tableIndex;
-    // print(selectedTableIndex);
     if (!activeTableList.contains(selectedTableIndex)) {
       activeTableList.add(selectedTableIndex);
     }
-    // print(activeTableList);
     notifyListeners();
   }
 
@@ -149,7 +116,6 @@ class ProviderClass with ChangeNotifier {
 
   void updateTabChoice({required bool isDineIn}) {
     tabchoice = isTakeAwayActive;
-
     notifyListeners();
   }
 
@@ -161,13 +127,10 @@ class ProviderClass with ChangeNotifier {
   }) async {
     cartMap[selectedTableIndex] ??= {'dineIn': [], 'takeAway': []};
     ("inside increment");
-
     List<Food> selectedItemList = isTakeAwayActive
         ? cartMap[selectedTableIndex]!['takeAway']!
         : cartMap[selectedTableIndex]!['dineIn']!;
-
     var selectedItem = selectedItemList.firstWhere((item) => item.id == id);
-
     var updatedItem = Food(
       id: selectedItem.id,
       productName: selectedItem.productName,
@@ -175,7 +138,6 @@ class ProviderClass with ChangeNotifier {
       count: currentCount + 1,
       isTakeAwayActive: selectedItem.isTakeAwayActive,
     );
-
     int index = selectedItemList.indexOf(selectedItem);
     selectedItemList[index] = updatedItem;
 
@@ -196,7 +158,6 @@ class ProviderClass with ChangeNotifier {
         : cartMap[selectedTableIndex]!['dineIn']!;
 
     var selectedItem = selectedItemList.firstWhere((item) => item.id == id);
-
     var updatedItem = Food(
       id: selectedItem.id,
       productName: selectedItem.productName,
@@ -204,10 +165,8 @@ class ProviderClass with ChangeNotifier {
       count: currentCount - 1,
       isTakeAwayActive: selectedItem.isTakeAwayActive,
     );
-
     int index = selectedItemList.indexOf(selectedItem);
     selectedItemList[index] = updatedItem;
-
     calculateTotalSumForEachTable();
     notifyListeners();
   }
@@ -216,7 +175,6 @@ class ProviderClass with ChangeNotifier {
       {required int id, required count, required price}) {
     cartMap[selectedTableIndex]!['takeAway']!
         .removeWhere((item) => item.id == id);
-
     calculateTotalSumForEachTable();
     notifyListeners();
   }
@@ -225,7 +183,6 @@ class ProviderClass with ChangeNotifier {
     isSelectedTable[index] = true;
     tableIndex = index;
   }
-
   // void tableIndexOff({required index}) {
   //   isSelectedTable[index] = false;
   // }
@@ -233,14 +190,12 @@ class ProviderClass with ChangeNotifier {
   void disableButton({required var id}) {
     idtoDisable.add(id);
     sharedDisabledIds.add(id);
-
     for (int i = 0; i < selectedItems.length; i++) {
       if (selectedItems[i].id == id) {
         selectedItems[i].isEnabled = false;
         break;
       }
     }
-
     notifyListeners();
   }
 
@@ -251,7 +206,6 @@ class ProviderClass with ChangeNotifier {
           .removeWhere((item) => item.id == id);
     }
     calculateTotalSumForEachTable();
-
     notifyListeners();
   }
 }

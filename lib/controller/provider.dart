@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/model.dart';
+import 'package:flutter_application_1/view/Cart_pages/cartDineIn.dart';
 
 import 'package:flutter_application_1/view/categories.dart';
 import 'package:http/http.dart' as http;
@@ -86,18 +87,6 @@ class ProviderClass with ChangeNotifier {
         }
       }
     }
-
-    // cartMap.forEach((tableIndex, tableData) {
-    //   print("Table Index: $tableIndex");
-    //   tableData.forEach((category, items) {
-    //     print("  Category: $category");
-    //     items.forEach((food) {
-    //       print("    Food: ${food.productName}, ID: ${food.id}");
-    //     });
-    //   });
-    // });
-
-    notifyListeners();
   }
 
   void selectedTableIndexfunc({required tableIndex}) {
@@ -194,24 +183,31 @@ class ProviderClass with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeFromcart({
-    required id,
-    required isTakeAwayActive,
-    required int currentCount,
-    required double priceofItem,
-  }) {
-    List<Food> selectedItemList = isTakeAwayActive
-        ? cartMap[selectedTableIndex]!['takeAway']!
-        : cartMap[selectedTableIndex]!['dineIn']!;
-    var selectedItem = selectedItemList.firstWhere((item) => item.id == id);
+  // void removeFromcart({
+  //   required id,
+  //   required isTakeAwayActive,
+  //   required int currentCount,
+  //   required double priceofItem,
+  // }) {
+  //   print(id);
+  //   List<Food> selectedItemList = isTakeAwayActive
+  //       ? cartMap[selectedTableIndex]!['takeAway']!
+  //       : cartMap[selectedTableIndex]!['dineIn']!;
 
-    var amount;
-    amount = priceofItem * currentCount;
-    selectedItem.count = 0;
-    // print("total sum before=====$totalSum");
-    totalSum = totalSum - amount;
-    notifyListeners();
-  }
+  //   var selectedItem = selectedItemList.firstWhere((item) => item.id == id);
+
+  //   isTakeAwayActive
+  //       ? cartMap[selectedTableIndex]!['takeAway']!.removeWhere(id)
+  //       : cartMap[selectedTableIndex]!['dineIn']!.removeWhere(id);
+  //   // selectedItemList
+
+  //   var amount;
+  //   amount = priceofItem * currentCount;
+  //   selectedItem.count = 0;
+
+  //   totalSum = totalSum - amount;
+  //   notifyListeners();
+  // }
 
   // int findIndexById(int id, List<Food> items) {
   //   for (int i = 0; i < items.length; i++) {
@@ -221,6 +217,12 @@ class ProviderClass with ChangeNotifier {
   //   }
   //   return -1;
   // }
+  void removefromCartTakeAway({required int id}) {
+    cartMap[selectedTableIndex]!['takeAway']!
+        .removeWhere((item) => item.id == id);
+
+    notifyListeners();
+  }
 
   void tableIndexOn({required index}) {
     isSelectedTable[index] = true;
@@ -240,6 +242,20 @@ class ProviderClass with ChangeNotifier {
         selectedItems[i].isEnabled = false;
         break;
       }
+    }
+
+    notifyListeners();
+  }
+
+  void removefromCart({required int id}) {
+    if (cartMap.containsKey(selectedTableIndex) &&
+        cartMap[selectedTableIndex]!.containsKey('dineIn')) {
+      // var selecteditemis = cartMap[selectedTableIndex]!['dineIn']!
+      //     .where((element) => element.id == id);
+
+      // print(selecteditemis);
+      cartMap[selectedTableIndex]!['dineIn']!
+          .removeWhere((item) => item.id == id);
     }
 
     notifyListeners();

@@ -82,15 +82,15 @@ class _CartPageState extends State<CartPage>
     Map<int, Map<String, List<Food>>> cartMap = provider.cartMap;
 
     Map<String, List<Food>> selectedTableMap = cartMap[selectedTable]!;
-    print("the table index is inside cart dine in: $selectedTable");
-    print("just for checking: ${provider.cartMap[selectedTable]!['dineIn']!}");
+    // print("the table index is inside cart dine in: $selectedTable");
+    // print("just for checking: ${provider.cartMap[selectedTable]!['dineIn']!}");
     (selectedTableMap['dineIn']!);
     List<Food> selectedItems = isDineIn
         ? provider
             .cartMap[selectedTable]!['dineIn']! // Explicit cast to List<Food>
         : provider.cartMap[selectedTable]!['takeAway']!;
     selectedItems.forEach((foods) {});
-    print("selected items for confirmation is equal to ${selectedItems}");
+    // print("selected items for confirmation is equal to ${selectedItems}");
     if (selectedItems.isNotEmpty) {
       if (isDineIn) {
         return CartDineIn();

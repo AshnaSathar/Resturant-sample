@@ -101,26 +101,11 @@ class _CartDineInState extends State<CartDineIn> {
                               Spacer(),
                               InkWell(
                                 onTap: () {
-                                  try {
-                                    double price =
-                                        double.parse(currentItem.price!);
-                                    int currentCount = currentItem.count!;
-
-                                    bool isTakeAwayActive = true;
-
-                                    Provider.of<ProviderClass>(context,
-                                            listen: false)
-                                        .removeFromcart(
-                                      isTakeAwayActive: isTakeAwayActive,
-                                      id: currentItem.id!,
-                                      currentCount: currentCount,
-                                      priceofItem: price,
-                                    );
-
-                                    setState(() {});
-                                  } catch (e) {
-                                    print("Error parsing price: $e");
-                                  }
+                                  print(
+                                      "index is ${currentItem.id} and name is ${currentItem.productName}");
+                                  Provider.of<ProviderClass>(context,
+                                          listen: false)
+                                      .removefromCart(id: currentItem.id!);
                                 },
                                 child: Icon(Icons.delete),
                               ),

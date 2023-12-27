@@ -28,10 +28,10 @@ class _CartTakeAwayState extends State<CartTakeAway> {
       Map<int, Map<String, List<Food>>> cartMap = provider.cartMap;
 
       // Map<String, List<Food>> selectedTableMap = cartMap[selectedTable]!;
-      print("the table index is inside cart dine in: ${selectedTable}");
+      // print("the table index is inside cart dine in: ${selectedTable}");
       provider.cartMap[selectedTable]!['takeAway']!.toList().forEach(
         (element) {
-          print("just for checking: ${element.productName}");
+          // print("just for checking: ${element.productName}");
         },
       );
 
@@ -125,26 +125,10 @@ class _CartTakeAwayState extends State<CartTakeAway> {
                             Spacer(),
                             InkWell(
                               onTap: () {
-                                try {
-                                  double price =
-                                      double.parse(currentItem.price!);
-                                  int currentCount = currentItem.count!;
-
-                                  bool isTakeAwayActive = true;
-
-                                  Provider.of<ProviderClass>(context,
-                                          listen: false)
-                                      .removeFromcart(
-                                    isTakeAwayActive: isTakeAwayActive,
-                                    id: currentItem.id!,
-                                    currentCount: currentCount,
-                                    priceofItem: price,
-                                  );
-
-                                  setState(() {});
-                                } catch (e) {
-                                  print("Error parsing price: $e");
-                                }
+                                Provider.of<ProviderClass>(context,
+                                        listen: false)
+                                    .removefromCartTakeAway(
+                                        id: currentItem.id!);
                               },
                               child: Icon(Icons.delete),
                             ),

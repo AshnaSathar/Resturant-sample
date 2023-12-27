@@ -128,7 +128,9 @@ class _CartTakeAwayState extends State<CartTakeAway> {
                                 Provider.of<ProviderClass>(context,
                                         listen: false)
                                     .removefromCartTakeAway(
-                                        id: currentItem.id!);
+                                        id: currentItem.id!,
+                                        count: currentItem.count,
+                                        price: currentItem.price);
                               },
                               child: Icon(Icons.delete),
                             ),
@@ -177,7 +179,7 @@ class _CartTakeAwayState extends State<CartTakeAway> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Total Cost: ${Provider.of<ProviderClass>(context).totalSum.toString()}",
+                  "Total Cost: ${Provider.of<ProviderClass>(context).totalSumForTable[selectedTable].toString()}",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,

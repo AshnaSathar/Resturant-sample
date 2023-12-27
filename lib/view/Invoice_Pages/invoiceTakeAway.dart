@@ -95,7 +95,7 @@ class InvoiceTakeAway extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Total Cost: ${Provider.of<ProviderClass>(context).totalSum}",
+                "Total Cost: ${Provider.of<ProviderClass>(context).totalSumForTable[selectedTable]}",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,

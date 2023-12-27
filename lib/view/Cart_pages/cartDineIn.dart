@@ -105,7 +105,10 @@ class _CartDineInState extends State<CartDineIn> {
                                       "index is ${currentItem.id} and name is ${currentItem.productName}");
                                   Provider.of<ProviderClass>(context,
                                           listen: false)
-                                      .removefromCart(id: currentItem.id!);
+                                      .removefromCart(
+                                          id: currentItem.id!,
+                                          count: currentItem.count,
+                                          price: currentItem.price);
                                 },
                                 child: Icon(Icons.delete),
                               ),
@@ -155,7 +158,7 @@ class _CartDineInState extends State<CartDineIn> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Total Cost: ${Provider.of<ProviderClass>(context).totalSum.toString()}",
+                  "Total Cost: ${Provider.of<ProviderClass>(context).totalSumForTable[selectedTable].toString()}",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,

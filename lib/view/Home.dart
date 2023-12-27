@@ -1,13 +1,13 @@
-// home.dart
-
 import 'package:flutter/material.dart';
-
+import 'package:flutter_application_1/controller/provider.dart';
 import 'package:flutter_application_1/utils/color_Constants.dart';
-
+import 'package:flutter_application_1/view/Table.dart';
+import 'package:flutter_application_1/view/bill.dart';
 import 'package:flutter_application_1/view/categories.dart';
 import 'package:flutter_application_1/widgets/CustomDrawer.dart';
-import 'package:flutter_application_1/view/Invoice_Pages/invoice.dart';
-import 'package:flutter_application_1/widgets/CustomeButton.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
+import 'package:material_dialogs/material_dialogs.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -28,10 +28,12 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    var selectedtable = Provider.of<ProviderClass>(context).selectedTableIndex;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
+          backgroundColor: ColorsUsed.ButtonPrimaryColor,
           onPressed: () {
             Navigator.push(
                 context,
@@ -44,7 +46,7 @@ class _HomePageState extends State<HomePage>
         appBar: AppBar(
           actions: [],
           title: Text(
-            "Restaurant",
+            "Resturant Table: ${selectedtable + 1}",
             style: TextStyle(color: ColorsUsed.text_Color_White),
           ),
           backgroundColor: ColorsUsed.black,
@@ -85,47 +87,120 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget buildTabContent({required bool isDineIn}) {
-    if (isDineIn) {
-      return isSendKitchenDineIn
-          ? Invoice()
-          : Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Welcome back Dine In!"),
-                  Text("  "),
-                ],
-              ),
-            );
-    } else {
-      return isSendKitchenTakeAway
-          ? Invoice()
-          : Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Welcome back Take Away!"),
-                  Text("  "),
-                  // InkWell(
-                  //   onTap: () {
-                  //     Provider.of<ProviderClass>(context, listen: false)
-                  //         .updateTabChoice(false);
-
-                  //     Navigator.pushReplacement(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //         builder: (context) => CategoriesPage(),
-                  //       ),
-                  //     );
-                  //   },
-                  //   child: Text(
-                  //     "START",
-                  //     style: TextStyle(color: Colors.blue[800]),
-                  //   ),
-                  // )
-                ],
-              ),
-            );
+    var provider = Provider.of<ProviderClass>(context);
+    var selectedTableIndex = provider.selectedTableIndex;
+    var cartMap = provider.cartMap;
+    var selectedTable = provider.selectedTableIndex;
+    if (cartMap[selectedTableIndex] == null ||
+        cartMap[selectedTableIndex]!.isEmpty) {
+      return Center(
+        child: Text("Welcome! Your cart is empty."),
+      );
     }
+
+    var selectedItems = isDineIn
+        ? cartMap[selectedTableIndex]!['dineIn']
+        : cartMap[selectedTableIndex]!['takeAway'];
+
+    return Column(
+      children: [
+        DataTable(
+          columns: [
+            DataColumn(
+              label: Text(
+                'Name',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                'Price',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                'Count',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                'Type',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataColumn(
+              label: Text(
+                'Price',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+          rows: (selectedItems ?? []).map((currentItem) {
+            return DataRow(cells: [
+              DataCell(Text(currentItem.productName ?? "Default")),
+              DataCell(Text(currentItem.price ?? "Default")),
+              DataCell(Text((currentItem.count ?? 0).toString())),
+              DataCell(Text(isDineIn ? 'DineIn' : 'TakeAway')),
+              DataCell(Text(
+                (double.parse(currentItem.price ?? "0.0") *
+                        (currentItem.count ?? 0))
+                    .toStringAsFixed(2),
+              )),
+            ]);
+          }).toList(),
+        ),
+        Spacer(),
+        Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Total Cost: ${Provider.of<ProviderClass>(context).totalSumForTable[selectedTable]}",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStatePropertyAll(ColorsUsed.buttonColor),
+              ),
+              onPressed: () {
+                Dialogs.materialDialog(
+                    color: Colors.white,
+                    title: 'Order Completed Successfully',
+                    lottieBuilder: Lottie.asset(
+                      'assets/Animation - 1702544292158.json',
+                      fit: BoxFit.contain,
+                    ),
+                    context: context,
+                    actions: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TablesPage(),
+                                ));
+                          },
+                          icon: Icon(Icons.close))
+                    ]);
+
+                isSelectedTable[selectedTableIndex] = false;
+                // Clear the cart for the selected table
+                Provider.of<ProviderClass>(context, listen: false)
+                    .clearCartForTable(tableIndex: selectedTableIndex);
+                setState(() {});
+              },
+              child: Text("Complete"),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }

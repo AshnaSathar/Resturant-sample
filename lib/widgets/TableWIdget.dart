@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/color_Constants.dart';
-import 'package:flutter_application_1/view/Table.dart';
 import 'package:flutter_application_1/view/categories.dart';
 
 class CustomTableWidget extends StatelessWidget {

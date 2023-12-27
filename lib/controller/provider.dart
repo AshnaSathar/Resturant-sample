@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/model/model.dart';
 import 'package:flutter_application_1/view/Cart_pages/cartDineIn.dart';
+import 'package:flutter_application_1/view/Home.dart';
 
 import 'package:flutter_application_1/view/categories.dart';
 import 'package:http/http.dart' as http;
@@ -116,6 +117,17 @@ class ProviderClass with ChangeNotifier {
 
   void updateTabChoice({required bool isDineIn}) {
     tabchoice = isTakeAwayActive;
+    notifyListeners();
+  }
+
+  Future clearCartForTable({required tableIndex}) async {
+    print("table index is $tableIndex");
+    if (cartMap.containsKey(tableIndex)) {
+      cartMap.remove(tableIndex);
+      // print("hey");
+      // cartMap.remove(tableIndex);
+      totalSumForTable.remove(tableIndex);
+    }
     notifyListeners();
   }
 

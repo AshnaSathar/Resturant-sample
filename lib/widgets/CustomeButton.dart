@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/Table.dart';
 
-bool isSendKitchen = false;
 bool isSendKitchenDineIn = false;
 bool isSendKitchenTakeAway = false;
 

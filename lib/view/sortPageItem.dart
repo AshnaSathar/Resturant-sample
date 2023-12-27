@@ -85,6 +85,10 @@ class _SortPageItemState extends State<SortPageItem> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(ColorsUsed.buttonColor),
+                        ),
                         onPressed: () {
                           // print("Button pressed");
                           // print(
@@ -109,6 +113,10 @@ class _SortPageItemState extends State<SortPageItem> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStatePropertyAll(ColorsUsed.buttonColor),
+                        ),
                         onPressed: () {
                           currentItem.isTakeAwayActive = true;
                           Provider.of<ProviderClass>(context, listen: false)

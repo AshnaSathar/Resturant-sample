@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
-import 'package:flutter_application_1/view/Invoice_Pages/invoiceDineIn.dart';
-import 'package:flutter_application_1/view/Invoice_Pages/invoiceTakeAway.dart';
+import 'package:flutter_application_1/unwanted/invoiceDineIn.dart';
+import 'package:flutter_application_1/unwanted/invoiceTakeAway.dart';
 import 'package:provider/provider.dart';
 
 class Invoice extends StatefulWidget {

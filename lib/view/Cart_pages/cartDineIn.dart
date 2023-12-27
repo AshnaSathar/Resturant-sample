@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
-
+import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/Home.dart';
 import 'package:flutter_application_1/view/categories.dart';
-import 'package:flutter_application_1/widgets/CustomeButton.dart';
 import 'package:provider/provider.dart';
 
 var currentCount = 1;
@@ -167,17 +166,26 @@ class _CartDineInState extends State<CartDineIn> {
               ),
               Spacer(),
               ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStatePropertyAll(ColorsUsed.buttonColor),
+                  ),
                   onPressed: () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomePage(),
-                        ));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(),
+                      ),
+                    );
                   },
                   child: Text("Kitchen")),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll(ColorsUsed.buttonColor),
+                    ),
                     onPressed: () {
                       Navigator.push(
                           context,

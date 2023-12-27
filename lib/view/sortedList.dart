@@ -54,7 +54,7 @@ class _SortedPageState extends State<SortedPage> {
         title: Text("${widget.selectedCategory}"),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: ColorsUsed.black,
+        backgroundColor: ColorsUsed.ButtonPrimaryColor,
         onPressed: () {
           Navigator.push(
             context,

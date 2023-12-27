@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
-
 import 'package:flutter_application_1/model/model.dart';
+import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/Home.dart';
-import 'package:flutter_application_1/view/Invoice_Pages/invoice.dart';
 import 'package:flutter_application_1/view/categories.dart';
-import 'package:flutter_application_1/widgets/CustomeButton.dart';
 import 'package:provider/provider.dart';
 
 var currentCount = 1;
@@ -188,8 +186,11 @@ class _CartTakeAwayState extends State<CartTakeAway> {
               ),
               Spacer(),
               ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStatePropertyAll(ColorsUsed.buttonColor),
+                  ),
                   onPressed: () {
-                    Provider.of<ProviderClass>(context).isTakeAwayActive = true;
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -200,6 +201,10 @@ class _CartTakeAwayState extends State<CartTakeAway> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStatePropertyAll(ColorsUsed.buttonColor),
+                    ),
                     onPressed: () {
                       Navigator.push(
                           context,

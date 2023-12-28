@@ -1,13 +1,15 @@
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
 
 import 'package:flutter_application_1/model/model.dart';
 import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/Cart_pages/cart.dart';
+
 import 'package:flutter_application_1/view/sortedList.dart';
 import 'package:provider/provider.dart';
+import 'package:searchfield/searchfield.dart';
 
+List<String> searchList = [];
 List<bool> isSelectedTable = List.generate(100, (index) => false);
 
 class CategoriesPage extends StatefulWidget {
@@ -37,6 +39,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
   }
 
   Widget build(BuildContext context) {
+    var provider = Provider.of<ProviderClass>(context);
+    List<Food> responseData = provider.responseData!.food!;
+    searchList =
+        responseData.map((food) => food.productName ?? "default").toList();
+    List<SearchFieldListItem<String>> searchFieldItems =
+        searchList.map((item) => SearchFieldListItem<String>(item)).toList();
+
     var containerHeight = MediaQuery.of(context).size.height * 0.2;
     var containerWidth = MediaQuery.of(context).size.width * 0.25;
 
@@ -46,17 +55,16 @@ class _CategoriesPageState extends State<CategoriesPage> {
         backgroundColor: ColorsUsed.black,
         actions: [
           Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: AnimSearchBar(
-              onSubmitted: (p0) {},
-              width: MediaQuery.sizeOf(context).width * .6,
-              textController: textController,
-              onSuffixTap: () {
-                setState(() {
-                  textController.clear();
-                });
-              },
-            ),
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CartPage(),
+                      ));
+                },
+                child: Icon(Icons.trolley)),
           )
         ],
       ),
@@ -162,26 +170,16 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     ),
                   ),
                 ),
-                Spacer(),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(
-                        ColorsUsed.buttonColor,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CartPage(),
-                        ),
-                      );
-                    },
-                    child: Text("Cart"),
-                  ),
-                ),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Color.fromARGB(255, 188, 203, 210))),
+                      width: MediaQuery.sizeOf(context).width * .7,
+                      child: SearchField(
+                          hint: "Search", suggestions: searchFieldItems)),
+                )
               ],
             ),
             Expanded(
@@ -196,11 +194,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     ),
                     itemBuilder: (BuildContext context, int index) {
                       var currentItem = responseData[index];
-
-                      // Check if the item is in the cart
-                      // bool isInCart = provider.selectedItems
-                      //     .any((item) => item.id == currentItem.id);
-
                       return Column(
                         children: [
                           Expanded(
@@ -264,18 +257,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                                     ColorsUsed.buttonColor),
                                           ),
                                           onPressed: () {
-                                            // print("Button pressed");
-                                            // print(
-                                            //     "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
-                                            // Provider.of<ProviderClass>(context)
-                                            //         .takeActiveindexTopass =
-                                            //     currentItem.isTakeAwayActive;
-
                                             selectedIndices
                                                 .add(currentItem.id!);
-                                            // print(
-                                            //     "selected indices are $selectedIndices");
-
                                             List<Map<String, dynamic>>
                                                 itemsToAdd = [
                                               {
@@ -308,15 +291,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                                     listen: false)
                                                 .updateTabChoice(
                                                     isDineIn: false);
-                                            // print("Button pressed");
-                                            // print(
-                                            //     "isTakeAwayActive: ${currentItem.isTakeAwayActive}");
-
                                             selectedIndices
                                                 .add(currentItem.id!);
-                                            // print(
-                                            //     "selected indices are $selectedIndices");
-
                                             List<Map<String, dynamic>>
                                                 itemsToAdd = [
                                               {

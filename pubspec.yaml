@@ -59,6 +59,7 @@ dependencies:
   footer: ^0.0.4
   material_dialogs: ^1.1.4
   pdf: ^3.10.7
+  searchfield: ^0.9.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0

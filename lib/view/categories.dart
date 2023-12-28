@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controller/provider.dart';
-
 import 'package:flutter_application_1/model/model.dart';
 import 'package:flutter_application_1/utils/color_Constants.dart';
 import 'package:flutter_application_1/view/Cart_pages/cart.dart';
-
-import 'package:flutter_application_1/view/sortedList.dart';
 import 'package:provider/provider.dart';
 import 'package:searchfield/searchfield.dart';
 
@@ -21,9 +18,12 @@ class CategoriesPage extends StatefulWidget {
 
 class _CategoriesPageState extends State<CategoriesPage> {
   List<int> selectedIndices = [];
-
   bool isSearchVisible = true;
   TextEditingController textController = TextEditingController();
+
+  String selectedCategory = "";
+  String searchText = "";
+
   @override
   void initState() {
     getData();
@@ -41,10 +41,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
   Widget build(BuildContext context) {
     var provider = Provider.of<ProviderClass>(context);
     List<Food> responseData = provider.responseData!.food!;
-    searchList =
+    List<String> searchList =
         responseData.map((food) => food.productName ?? "default").toList();
-    List<SearchFieldListItem<String>> searchFieldItems =
-        searchList.map((item) => SearchFieldListItem<String>(item)).toList();
 
     var containerHeight = MediaQuery.of(context).size.height * 0.2;
     var containerWidth = MediaQuery.of(context).size.width * 0.25;
@@ -57,14 +55,16 @@ class _CategoriesPageState extends State<CategoriesPage> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CartPage(),
-                      ));
-                },
-                child: Icon(Icons.trolley)),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CartPage(),
+                  ),
+                );
+              },
+              child: Icon(Icons.trolley),
+            ),
           )
         ],
       ),
@@ -75,11 +75,33 @@ class _CategoriesPageState extends State<CategoriesPage> {
         }
 
         List<Food> responseData = provider.responseData!.food!;
-
         List<String> categoryNames = responseData
             .map((food) => food.categoryName ?? "default")
             .toSet()
-            .toList(); // to avoid duplication in the list
+            .toList();
+
+        List<SearchFieldListItem<String>> searchFieldItems = searchList
+            .map((item) => SearchFieldListItem<String>(item))
+            .toList();
+
+        List<Food> displayedItems = [];
+
+        if (selectedCategory.isNotEmpty) {
+          // User selected a category, filter by category
+          displayedItems = responseData
+              .where((food) => food.categoryName == selectedCategory)
+              .toList();
+        } else if (searchText.isNotEmpty) {
+          // User entered a search query, filter by search query
+          displayedItems = responseData
+              .where((food) => food.productName!
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()))
+              .toList();
+        } else {
+          // Show all items
+          displayedItems = responseData;
+        }
 
         return Column(
           children: [
@@ -108,22 +130,16 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 itemCount: categoryNames.length,
                 itemBuilder: (BuildContext context, int index) {
                   var currentCategory = categoryNames[index];
-                  var categoryItems = responseData
-                      .where((food) => food.categoryName == currentCategory)
-                      .toList();
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 5, left: 5),
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SortedPage(
-                              selectedCategory: currentCategory,
-                            ),
-                          ),
-                        );
+                        setState(() {
+                          selectedCategory = currentCategory;
+                          searchText =
+                              ""; // Reset search text when a category is selected
+                        });
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -137,7 +153,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           child: Column(
                             children: [
                               Image.network(
-                                categoryItems.first.image ?? "",
+                                responseData
+                                        .firstWhere((food) =>
+                                            food.categoryName ==
+                                            currentCategory)
+                                        .image ??
+                                    "",
                                 height: 50,
                                 width: 50,
                               ),
@@ -173,12 +194,24 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                              color: Color.fromARGB(255, 188, 203, 210))),
-                      width: MediaQuery.sizeOf(context).width * .7,
-                      child: SearchField(
-                          hint: "Search", suggestions: searchFieldItems)),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Color.fromARGB(255, 188, 203, 210),
+                      ),
+                    ),
+                    width: MediaQuery.sizeOf(context).width * 0.7,
+                    child: SearchField(
+                      hint: "Search",
+                      suggestions: searchFieldItems,
+                      onSearchTextChanged: (String newText) {
+                        setState(() {
+                          searchText = newText;
+                          selectedCategory =
+                              ""; // Reset selected category when searching
+                        });
+                      },
+                    ),
+                  ),
                 )
               ],
             ),
@@ -193,7 +226,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       mainAxisExtent: 250,
                     ),
                     itemBuilder: (BuildContext context, int index) {
-                      var currentItem = responseData[index];
+                      var currentItem = displayedItems[index];
+
                       return Column(
                         children: [
                           Expanded(
@@ -210,7 +244,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                       padding: const EdgeInsets.only(top: 15),
                                       child: Container(
                                         width: containerWidth,
-                                        height: containerHeight * .5,
+                                        height: containerHeight * 0.5,
                                         child: Image.network(
                                           currentItem.image ?? "",
                                           fit: BoxFit.fill,
@@ -254,7 +288,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                           style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStatePropertyAll(
-                                                    ColorsUsed.buttonColor),
+                                              ColorsUsed.buttonColor,
+                                            ),
                                           ),
                                           onPressed: () {
                                             selectedIndices
@@ -283,14 +318,16 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                           style: ButtonStyle(
                                             backgroundColor:
                                                 MaterialStatePropertyAll(
-                                                    ColorsUsed.buttonColor),
+                                              ColorsUsed.buttonColor,
+                                            ),
                                           ),
                                           onPressed: () {
                                             currentItem.isTakeAwayActive = true;
                                             Provider.of<ProviderClass>(context,
                                                     listen: false)
                                                 .updateTabChoice(
-                                                    isDineIn: false);
+                                              isDineIn: false,
+                                            );
                                             selectedIndices
                                                 .add(currentItem.id!);
                                             List<Map<String, dynamic>>
@@ -311,7 +348,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                         ),
                                       ),
                                     ],
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
@@ -319,7 +356,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         ],
                       );
                     },
-                    itemCount: responseData.length,
+                    itemCount: displayedItems.length,
                   ),
                 ],
               ),

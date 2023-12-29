@@ -191,6 +191,12 @@ class _CartTakeAwayState extends State<CartTakeAway> {
                         MaterialStatePropertyAll(ColorsUsed.buttonColor),
                   ),
                   onPressed: () {
+                    print("=================inside");
+                    DateTime datetime = DateTime.now();
+                    String dateStr = datetime.toString();
+                    print("date time is: $dateStr");
+                    Provider.of<ProviderClass>(context, listen: false)
+                        .acceptedOrder();
                     Navigator.push(
                         context,
                         MaterialPageRoute(

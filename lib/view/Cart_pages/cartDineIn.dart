@@ -121,7 +121,7 @@ class _CartDineInState extends State<CartDineIn> {
                                     int currentCount = currentItem.count!;
 
                                     bool isTakeAwayActive = false;
-                                    (currentCount > 0)
+                                    (currentCount > 1)
                                         ? Provider.of<ProviderClass>(context,
                                                 listen: false)
                                             .decrement(
@@ -171,6 +171,11 @@ class _CartDineInState extends State<CartDineIn> {
                         MaterialStatePropertyAll(ColorsUsed.buttonColor),
                   ),
                   onPressed: () {
+                    DateTime datetime = DateTime.now();
+                    String dateStr = datetime.toString();
+                    print("date time is: $dateStr");
+                    Provider.of<ProviderClass>(context, listen: false)
+                        .acceptedOrder();
                     Navigator.push(
                       context,
                       MaterialPageRoute(

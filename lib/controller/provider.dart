@@ -8,7 +8,6 @@ List<int> disabledIds = [];
 
 class ProviderClass with ChangeNotifier {
   Map<int, double> totalSumForTable = {};
-
   int tableIndex = 0;
   ModelClass? responseData;
   int selectedTableIndex = 0;
@@ -21,6 +20,7 @@ class ProviderClass with ChangeNotifier {
   List activeTableList = [];
   bool? isTakeAwayActive;
   Map<int, Map<String, List<Food>>> cartMap = {};
+  Map<int, Map<String, List<Food>>> orderMap = {};
   var sample;
   Future<void> fetchData() async {
     try {
@@ -30,10 +30,7 @@ class ProviderClass with ChangeNotifier {
 
       if (response.statusCode == 200) {
         responseData = ModelClass.fromJson(jsonDecode(response.body));
-        selectedIds = List<String>.filled(
-          responseData?.food?.length ?? 0,
-          "",
-        );
+        selectedIds = List<String>.filled(responseData?.food?.length ?? 0, "");
         notifyListeners();
       } else {
         print("Failed to fetch data. Status code: ${response.statusCode}");
@@ -82,6 +79,37 @@ class ProviderClass with ChangeNotifier {
     notifyListeners();
   }
 
+  void acceptedOrder() {
+    orderMap[selectedTableIndex] ??= {'dineIn': [], 'takeAway': []};
+
+    orderMap[selectedTableIndex]!['takeAway']!
+        .addAll(cartMap[selectedTableIndex]!['takeAway']!);
+
+    orderMap[selectedTableIndex]!['dineIn']!
+        .addAll(cartMap[selectedTableIndex]!['dineIn']!);
+
+    print("ordered accepted list is ");
+    orderMap[selectedTableIndex]!['takeAway']!.forEach(
+      (element) {
+        print(element.productName);
+      },
+    );
+    orderMap[selectedTableIndex]!['dineIn']!.forEach(
+      (element) {
+        print(element.productName);
+      },
+    );
+    cartMap[selectedTableIndex]!['dineIn']!.clear();
+    cartMap[selectedTableIndex]!['takeAway']!.clear();
+    print("inside cart:");
+    cartMap[selectedTableIndex]!['dineIn']!.forEach(
+      (element) {
+        print(element.productName);
+      },
+    );
+    notifyListeners();
+  }
+
   void calculateTotalSumForEachTable() {
     totalSumForTable.clear();
     cartMap.forEach((tableIndex, tableData) {
@@ -119,8 +147,8 @@ class ProviderClass with ChangeNotifier {
 
   Future clearCartForTable({required tableIndex}) async {
     print("table index is $tableIndex");
-    if (cartMap.containsKey(tableIndex)) {
-      cartMap.remove(tableIndex);
+    if (orderMap.containsKey(tableIndex)) {
+      orderMap.remove(tableIndex);
       // print("hey");
       // cartMap.remove(tableIndex);
       totalSumForTable.remove(tableIndex);
@@ -149,23 +177,20 @@ class ProviderClass with ChangeNotifier {
     );
     int index = selectedItemList.indexOf(selectedItem);
     selectedItemList[index] = updatedItem;
-
     calculateTotalSumForEachTable();
     notifyListeners();
   }
 
-  Future<void> decrement({
-    required int id,
-    required int currentCount,
-    required dynamic priceofItem,
-    required bool isTakeAwayActive,
-  }) async {
+  Future<void> decrement(
+      {required int id,
+      required int currentCount,
+      required dynamic priceofItem,
+      required bool isTakeAwayActive}) async {
     cartMap[selectedTableIndex] ??= {'dineIn': [], 'takeAway': []};
 
     List<Food> selectedItemList = isTakeAwayActive
         ? cartMap[selectedTableIndex]!['takeAway']!
         : cartMap[selectedTableIndex]!['dineIn']!;
-
     var selectedItem = selectedItemList.firstWhere((item) => item.id == id);
     var updatedItem = Food(
       id: selectedItem.id,

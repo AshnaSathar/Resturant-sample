@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Your App Title',
-        home: CategoriesPage(),
+        home: LoginPage(),
       ),
     );
   }

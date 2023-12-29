@@ -47,7 +47,7 @@ class Food {
       this.productName,
       this.categoryName,
       this.isTakeAwayActive = false,
-      this.count = 0,
+      this.count = 1,
       this.selectedTableIndex,
       this.isEnabled = true});
 
